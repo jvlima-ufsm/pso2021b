@@ -1,0 +1,466 @@
+#+TITLE: Operating System Overview (part 2)
+#+SUBTITLE: Operating Systems
+# #+DATE: August 10, 2016\newline\begin{columns}\begin{column}{0.5\textwidth}\raggedleft\includegraphics[width=2cm]{figures/logo_ufsm}\end{column}\begin{column}{0.5\textwidth}\includegraphics[width=2cm]{figures/logo_inf}\end{column}\end{columns}
+#+DATE: 2020/2
+#+AUTHOR: João Vicente Ferreira Lima
+#+EMAIL: jvlima@inf.ufsm.br
+#+OPTIONS: H:3 num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+LATEX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [xcolor=dvipsnames, 11pt, presentation,aspectratio=169]
+# #+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode 8.3.4)
+#+TAGS: noexport(n)
+#+STARTUP: beamer overview indent
+#+BEAMER_FRAME_LEVEL: 2
+#+BEAMER_THEME: Madrid
+#+BEAMER_HEADER: \institute[UFSM]{Universidade Federal de Santa Maria \\ \url{jvlima@inf.ufsm.br} \\ \url{http://www.inf.ufsm.br/~jvlima}}
+#+LATEX_HEADER: \setbeamertemplate{footline}[frame number]
+#+LATEX_HEADER: \usecolortheme[named=BrickRed]{structure}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage[american]{babel}
+#+LATEX_HEADER: \usepackage{url} \urlstyle{sf}
+#+LATEX_HEADER: \useinnertheme{circles}
+#+LATEX_HEADER: \let\alert=\structure
+#+LATEX_HEADER: \usepackage{wrapfig}
+#+LATEX_HEADER: 
+
+#+begin_export latex
+\frame<handout:0>
+{
+  \frametitle{Outline}
+  \tableofcontents
+}
+
+\makeatletter
+\AtBeginSubsection[]
+{
+  \frame<handout:0>
+  {
+    \frametitle{Outline}
+    \tableofcontents[current,currentsubsection]
+  }
+}
+\makeatother
+#+end_export
+
+* Introduction to Operating System
+*** Operating System
+The term /operating system/ is commonly used with two meanings:
+1. To denote the entire package: the central software such as
+   command-line interpreters, GUI, file utilities, and editors.
+2. To the central software that manages and allocates computer
+   resources.
+#+BEGIN_EXPORT latex
+\begin{center}
+  \includegraphics[scale=1]{figures/os_role}
+\end{center}
+#+END_EXPORT
+*** Operating System
+The term /operating system/ is commonly used with two meanings:
+1. To denote the entire package: the central software such as
+   command-line interpreters, GUI, file utilities, and editors.
+2. To the central software that manages and allocates computer
+   resources.
+#+BEGIN_EXPORT latex
+\begin{center}
+  \includegraphics[scale=1]{figures/os_role2}
+\end{center}
+#+END_EXPORT
+* Unix Overview
+** Unix History
+*** Unix history
+UNIX was written in assembly by Ken Thompson at Bell Labs (AT&T) in
+1969 for a Digital PDP-7 minicomputer. It took several ideias from
+MULTICS such as:
+#+LaTex: \begin{columns}\begin{column}{0.7\textwidth}
+  - tree-structured file system.
+  - separate program for interpreting commands (shell).
+  - notion of files as unstructured streams of bytes.
+#+LaTex: \end{column}\begin{column}{0.3\textwidth}
+#+BEGIN_EXPORT latex
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{figures/ken_denis}
+\end{center}
+#+END_EXPORT
+#+LaTex: \end{column}\end{columns}
+
+Denis Ritchie designed and implemented C language between 1969-1973
+at Bell Labs. By 1973, UNIX was almost totally written in C.
+#+LaTex: \begin{block}{C for system programming}
+In the 70s, widely used languages were designed to other purposes:
+- FORTRAN for mathematical tasks
+- COBOL for commercial systems 
+#+LaTex: \end{block}
+*** PDP-7 minicomputer
+#+BEGIN_EXPORT latex
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{figures/pdp7}
+\end{center}
+#+END_EXPORT
+*** Unix popularity
+At this time, UNIX was popular in universities. The terms of AT&T'
+agreement with the US government prevented it from selling software.
+The UNIX university distributions included documentation and the
+kernel source code (10k lines).
+
+#+LaTex: \begin{block}{BSD and System V}
+- *BSD* or /Berkeley Software Distribution/ was a UNIX version created
+  when Thompson spent the 1975/1976 academic year as a visiting
+  professor at Berkeley. It included /C shell/, /vi/, /sendmail/, a Pascal
+  compiler, etc.
+- *System V* was a comercial version of UNIX when AT&T was permitted to
+  market UNIX.
+Other implementations: SunOS or Solaris, Ultrix and OSF/1, IBM's AIX,
+HP-UX, NeXT's NeXTEP, A/UX for the Apple Macintosh, XENIX.
+#+LaTex: \end{block}
+
+*** Unix architecture
+#+LaTeX: \begin{columns}\begin{column}{0.5\textwidth}
+#+BEGIN_EXPORT latex
+\begin{center}
+  \includegraphics[scale=1]{figures/unix_arch}
+\end{center}
+#+END_EXPORT
+#+LaTeX: \end{column}\begin{column}{0.5\textwidth}
+- The _kernel_ is relatively small, and controls the hardware resources.
+- The interface to the kernel is the _system calls_. Libraries are built
+  on top of it, but applications are free to use both.
+- The _shell_ is a special application that provides an interface for
+  running other applications.
+#+LaTeX: \end{column}\end{columns}
+** The BSDs
+*** The BSDs
+It is worth noting that another free UNIX was already available during
+the early 1990s. Bill and Lynne Jolitz had developed a port of the
+already mature BSD system (Net/2 from AT&T) for the x86-32, known as
+386/BSD.  Alternatives from the 386/BSD were:
+- NetBSD, FreeBSD, OpenBSD, DragonFly BSD (FreeBSD 4.x)
+#+LaTex: \begin{block}{AT\&T and Berkeley lawsuit}
+In April 1992, USL (AT&T) filed suit against BSDi (Berkeley) and the
+University of California claiming that the product was still
+encumbered by proprietary USL source code and trace secrets. A
+countersuit by the university ensued since USL had not given credit
+for the BSD code in System V.
+
+*The veredict:* Berkeley was required to remove 3 of the 18k files from
+ Net/2 release, make some minor changes, and add USL copyright,
+ resulting in the 4.4BSD-Lite. The terms of legal settlement required
+ BSDi, FreeBSD and NetBSD to replace their Net/2 base.
+#+LaTex: \end{block}
+* Linux Overview
+** The GNU project
+*** The GNU project
+Richard Stallman started the GNU project to develop an entire, freely
+available, UNIX-like system, consisting of software+kernel. 
+Initially they produced a wide range of other programs, but did not
+produce a working UNIX kernel.
+#+LaTex: \begin{exampleblock}{GNU software}
+GNU C compiler, /bash/ shell, GNU C library.
+#+LaTex: \end{exampleblock}
+#+LaTex: \begin{block}{GNU/HURD}
+GNU/HURD project is a kernel based on the Mach microkernel, but never
+released.
+#+LaTex: \end{block}
+** Linux kernel
+*** The Linux kernel
+In 1991, Linus Torvalds was inspired to write an OS for his Intel
+80396 PC.  In the course of his studies, he had come into contact with
+Minix, a small UNIX-like operating system developed by Andrew
+Tanenbaum.
+
+The first version was released by March 1994.
+#+LaTex: \begin{block}{Linux distributions}
+- Slackware in 1993
+- Debian soon after
+- SUSE and Red Hat followed
+- Ubuntu in 2004
+#+LaTex: \end{block}
+#+LaTex: \vspace{2mm}
+#+BEGIN_CENTER
+IBM commercial: [[https://www.youtube.com/watch?v=x7ozaFbqg00]]
+#+END_CENTER
+*** 
+#+BEGIN_EXPORT latex
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{figures/linux_milestones}
+\end{center}
+#+END_EXPORT
+*** Android
+#+BEGIN_EXPORT latex
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{figures/android_arch}
+\end{center}
+#+END_EXPORT
+* Fundamental Concepts
+** The Kernel
+*** The Kernel role
+Tasks performed by the kernel:
+- *Process scheduling*: Linux is a /preemptive multitasking/ SO.
+- *Memory management*: virtual memory management.
+- *File system*: file I/O.
+- *Creation and termination of processes*: allocating resources.
+- *Access to devices*: interface between programs and devices.
+- *Networking*: transmit and receive network messages on behalf of
+     user processes.
+- *System call API*: entry points to request various tasks.
+#+LaTex: \begin{block}{Kernel mode vs user mode}
+Tipically there are at least two differente modes: /user mode/ and
+/kernel mode/ (or /supervisor mode/). When running in user mode, the CPU
+can access only memory that is marked as begin in user space.
+
+Certain operations can be performed only in kernel mode.
+#+LaTex: \end{block}
+*** Linux system layers
+#+BEGIN_EXPORT latex
+\vspace{-4mm}
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{figures/linux_layers}
+\end{center}
+#+END_EXPORT
+*** Linux kernel layers
+#+BEGIN_EXPORT latex
+\vspace{-2mm}
+\begin{center}
+  \includegraphics[width=0.6\textwidth]{figures/linux_inside}
+\end{center}
+#+END_EXPORT
+** The Shell
+*** The Shell
+The /shell/ or /command interpreter/ is a special-purpose program designed
+to read commands and execute then. On some OS the shell is an integral
+part of the kernel, on UNIX is a user process. Examples:
+- *Bourne shell (sh)*: the oldest of the widely used shells, written by
+  Steve Bourne.
+- *C shell (csh)*: similar to C on control-flow constructs.
+- *Korn shell (ksh)*: successor of the Bourne shell.
+- *Bourne again shell (bash)*: GNU Bourne shell with features from C and
+  Korn shells. 
+The shells are designed not only for interactive use, but also for the
+interpretation of /shell scripts/ (text with commands). For this
+purpose, each has features such as: variables, loop and conditional
+statements, I/O commands, and functions.
+** Users and Groups
+*** Users and groups
+*Users*: every user has a unique /login name/ (username) and /user ID/
+(UID). There are defined in the system /password file/ =/etc/passwd= with:
+- *Group ID*: the GID of first group the user is a member.
+- *Home directory*: initial user directory.
+- *Login shell*: name of the program to interpret user commands.
+The password is recorded in encrypted form in the /shadow password
+file/.
+#+LaTeX: \vspace{2mm}
+
+*Groups*: users are organized in /groups/ The /group file/ =/etc/group= has:
+- *Group name*: unique group name.
+- *Group ID (GID)*: numeric ID.
+- *User list*: list of login names of users who are members.
+#+LaTeX: \vspace{2mm}
+
+*Superuser*: or /root/ has special privileges within the system.
+** Files and Directories
+*** Files and directories
+#+BEGIN_EXPORT latex
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{figures/linux_dirs}
+\end{center}
+#+END_EXPORT
+*** Files and directories
+*File types*: each file is marked with a /type/. Ordinary files are
+ /regular/ or /plain/ files. Other types are devices, pipes, sockets,
+ directories, and symbolic links.
+#+LaTeX: \vspace{2mm}
+
+*Directories*: a /directory/ is a special file whose contents take the
+ form of a table of filenames. Each directory entry is a /link/ or /hard
+ link/. Every directory has at least two entries:
+- *. (dot)* which is a link to the directory itself
+- *.. (dot-dot)* which is a link to its /parent directory/.
+#+LaTeX: \vspace{2mm}
+
+*Symbolic links*: while a hard link points to the data itself, a /soft
+ link/ only provides the text of an /actual/ file name.
+*** Files and directories
+*Filenames*: On most Linux systems, filenames can be up to 255
+ characters long. We should avoid non-portable characters in
+ filesnames (=[-._a-zA-Z0-9])=.
+#+LaTeX: \vspace{4mm}
+
+*Pathname*: is a string with an optional initial slash (=/=) followed by a
+ series of filenames separated by slashes.
+- *Absolute pathname*: begin with a slash (=/=). Ex: =/usr/include=.
+- *Relative pathname*: relative to a process's current working
+  directory. Ex: =../bin/exec=.
+*** File ownership and permissions
+Each file has an associated UID and GID that define its owner and
+group's owner. The system divides users into three categories of file
+access:
+- *owner* (/user/) of the file
+- *group* users who are members of the group
+- *other* the rest of the world
+Three permission bits may be set for each user:
+- *read*
+- *write*
+- *execute* 
+In directories, these permissions have different meanings:
+- *read* allows to list the contents (filenames)
+- *write* add/delete/change contents
+- *execute* (or /search/) access to files within the directory
+*** File ownership and permissions
+#+BEGIN_EXPORT latex
+\begin{center}
+  \includegraphics[width=\textwidth]{figures/linux_permissions}
+\end{center}
+#+END_EXPORT
+*** File I/O Model
+One of the features of UNIX systems is the concept of /universality of
+I/O/, i.e, system calls perform I/O on all types of files, including
+devices.
+
+*File descriptors* - the I/O system calls refer to open files by a /file
+ descriptor/, a non-negative integer. 
+Normally, a process inherits three open file descriptiors when it is
+started by the shell:
+- *0* (/standard input/) from it takes the input.
+- *1* (/standard output/) to which the process writes its output.
+- *2* (/standard error/) to which the process writes error messages.
+#+LaTex: \begin{columns}\begin{column}{0.45\textwidth}
+#+LaTex: \begin{block}{File descriptions}
+#+begin_src c
+char c = fgetc( 0 );
+fprintf( 1 , "%c\n", c);
+#+end_src
+#+LaTex: \end{block}
+#+LaTex: \end{column}\begin{column}{0.45\textwidth}
+#+LaTex: \begin{block}{The \emph{stdio} library}
+#+begin_src c
+char c = fgetc(stdin);
+fprintf(stdout, "%c\n", c);
+#+end_src
+#+LaTex: \end{block}
+#+LaTex: \end{column}\end{columns}
+
+** System Calls
+*** System Calls
+The interface between OS and programs. Most calls are performed by
+system libraries (=libc=).
+#+BEGIN_EXPORT latex
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{figures/calls_file.png}
+  \includegraphics[width=0.7\textwidth]{figures/calls_proc.png}
+\end{center}
+#+END_EXPORT
+*** Call to read()
+#+BEGIN_EXPORT latex
+\vspace{-8mm}
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{figures/call_read.png}
+\end{center}
+#+END_EXPORT
+
+
+** Processes
+*** Process definition
+A *process* is a instance of an executing program. The kernel:
+1. loads the code into virtual memory
+2. allocates space for program variables
+3. sets up kernel bookkeeping data structures to record various
+   information)
+#+LaTex: \begin{block}{Process memory layout}
+A process is divided into the following parts, known as /segments/:
+- *text* - the intructions of the program.
+- *data* - the static variables.
+- *heap* - an area from which programs dynamically allocate memory.
+- *stack* - piece of memory that grows and shrinks as functions are
+  called and return, used to allocate storage for local variables and
+  function call linkage information.
+#+LaTex: \end{block}
+*** Process memory layout
+#+BEGIN_EXPORT latex
+\begin{center}
+  \includegraphics[scale=1]{figures/process_layout}
+\end{center}
+#+END_EXPORT
+*** Process creation
+The =fork()= system call creates a new process. The process that calls
+=fork()= is the /parent process/, and the new /child process/. Additional
+steps:
+- the kernel creates the child by making a duplicate of the parent
+- the child inherits copies of the parent's data, stack, and heap
+  segments.
+The child process goes on either to execute a different set of
+functions, or to use the =execve()= system call to load and execute a
+entirely new program.
+#+LaTex: \begin{block}{Process identifier}
+Each process has a unique /process identifier/ (PID), and a /parent
+process identifier/ (PPID).
+#+LaTex: \end{block}
+*** A ls from the shell
+#+BEGIN_EXPORT latex
+\vspace{-4mm}
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{figures/linux_ls_steps}
+\end{center}
+#+END_EXPORT
+*** Process tree
+#+LaTex: \vspace{-3mm}
+#+LaTex: \begin{exampleblock}{}
+#+BEGIN_EXAMPLE
+init-+-acpid
+     |-atd
+     |-cron
+     |-cups-browsed
+     |-cupsd
+     |-exim4
+     |-6*[getty]
+     |-irqbalance
+     |-portmap
+     |-redis-server---2*[{redis-server}]
+     |-rsyslogd-+-{in:imklog}
+     |          |-{in:imuxsock}
+     |          `-{rs:main Q:Reg}
+     |-screen---bash
+     |-sshd-+-sshd---sshd---bash---pstree
+     |      `-2*[sshd---sshd---bash]
+     `-udevd
+#+END_EXAMPLE
+#+LaTex: \end{exampleblock}
+*** Special-purpose processes
+*The init process* - when booting the system, the kernel creates a
+ special process called /init/, the parent of all processes, which is
+ derived from the program =/sbin/init=. All programs from the system are
+ created either by /init/ or by one of its descendants.
+
+The /init/ process can't be killed, and terminates only when the system
+is shut down.
+#+LaTex: \vspace{2mm}
+
+*Daemon processes* - a /daemon/ is a special-purpose process that is
+ created and handled by the system, but:
+- It is long-lived, in general started at system boot and remais in
+  existence until the system is shut down.
+- It runs in background, and has no controlling terminal from which it
+  can read input or to which it can write output. 
+* FreeBSD
+** FreeBSD
+*** FreeBSD overview
+ FreeBSD is a 4.4BSD-Lite based operating system for Intel and AMD64
+ computers.
+Software can be installed using:
+- *pkg* is the binary package management for FreeBSD.
+- *Ports Collection* which is a set of =Makefiles=, patches, and
+  description files stored in =/usr/ports=.
+#+LaTex: \begin{block}{Systems using FreeBSD}
+- *Playstation 4* - [[http://www.phoronix.com/scan.php?page=news_item&px=MTM5NDI][Sony's PlayStation 4 Is Running Modified FreeBSD 9]]
+- *Apple OS X* and some of *iOS*
+- Apache, Whatsapp, Netflix, etc
+#+LaTex: \end{block}
+#+BEGIN_EXPORT latex
+%\vspace{15mm}
+\begin{flushright}
+  \includegraphics[width=3cm]{figures/logo-freebsd}
+\end{flushright}
+#+END_EXPORT
+*** 

@@ -1,0 +1,453 @@
+#+TITLE: Basic Shell Commands
+#+SUBTITLE: Operating System Practice
+#+DATE: March 18, 2019
+#+AUTHOR: João Vicente Ferreira Lima
+#+EMAIL: jvlima@inf.ufsm.br
+#+OPTIONS: H:3 num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+OPTIONS: TeX:t LaTeX:t
+#+startup: beamer
+#+LATEX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [xcolor=dvipsnames, 11pt, presentation]
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode 8.3.4)
+#+TAGS: noexport(n)
+#+STARTUP: beamer overview indent
+#+BEAMER_FRAME_LEVEL: 2
+#+BEAMER_THEME: Madrid
+#+BEAMER_HEADER: \institute[UFSM]{Universidade Federal de Santa Maria \\ \url{jvlima@inf.ufsm.br} \\ \url{http://www.inf.ufsm.br/~jvlima}}
+#+LATEX_HEADER: \setbeamertemplate{footline}[frame number]
+#+LATEX_HEADER: \usecolortheme[named=BrickRed]{structure}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage[american]{babel}
+#+LATEX_HEADER: \usepackage{url} \urlstyle{sf}
+#+LATEX_HEADER: \useinnertheme{circles}
+#+LATEX_HEADER: \let\alert=\structure
+#+LATEX_HEADER: \usepackage{wrapfig}
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \newcommand{\bashcmd}[1]{\textcolor{White}{\colorbox{Sepia}{\texttt{#1}}}}
+#+LATEX_HEADER: 
+
+#+BEGIN_EXPORT latex
+\frame<handout:0>
+{
+  \frametitle{Outline}
+  \tableofcontents
+}
+
+\makeatletter
+\AtBeginSubsection[]
+{
+  \frame<handout:0>
+  {
+    \frametitle{Outline}
+    \tableofcontents[current,currentsubsection]
+  }
+}
+\makeatother
+#+END_EXPORT
+
+* FreeBSD                                                          :noexport:
+** FreeBSD
+*** FreeBSD overview
+ FreeBSD is a 4.4BSD-Lite based operating system for Intel and AMD64
+ computers.
+Software can be installed using:
+- *pkg* is the binary package management for FreeBSD.
+- *Ports Collection* which is a set of =Makefiles=, patches, and
+  description files stored in =/usr/ports=.
+#+LaTex: \begin{block}{Adding an user on FreeBSD}
+#+begin_src sh :results output :exports both
+adduser
+#+end_src
+#+LaTex: \end{block}
+#+BEGIN_EXPORT latex
+%\vspace{15mm}
+\begin{flushright}
+  \includegraphics[width=3cm]{figures/logo-freebsd}
+\end{flushright}
+#+END_EXPORT
+*** FreeBSD overview
+#+BEGIN_EXPORT latex
+%\vspace{15mm}
+\begin{center}
+  \includegraphics[width=\textwidth]{figures/adduser-freebsd}
+\end{center}
+#+END_EXPORT
+
+* Basic Commands
+** Editors
+*** VI IMproved
+\bashcmd{vim} is a text editor compatible with \bashcmd{vi}. 
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports code
+vim foo.txt
+#+end_src
+#+LaTex: \end{block}
+Basic commands:
+- \bashcmd{:q} quit
+- \bashcmd{:w} write to the current file
+- \bashcmd{:w foobar.txt} write to /foobar.txt/
+- \bashcmd{:q!} do not save changes
+- \bashcmd{:wq} save and quit
+*** nano
+\bashcmd{nano} is a small text editor. Its basic commands appears at
+the screen.
+#+BEGIN_EXPORT latex
+%\vspace{15mm}
+\begin{center}
+  \includegraphics[width=\textwidth]{figures/nano}
+\end{center}
+#+END_EXPORT
+** Basic Commands
+*** Help
+\bashcmd{man} is the system manual pages. 
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+man ls
+#+end_src
+#+LaTex: \end{block}
+\bashcmd{man -k} search a manual page by keyword.
+*** cat
+One of the easiest Linux commands, it simply outputs the contents of
+one or more files.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+cat /etc/services
+#+end_src
+#+Latex: \end{block}
+*** ls
+The \bashcmd{ls} command lists the contents of a directory.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+ls 
+#+end_src
+#+Latex: \end{block}
+
+#+LaTex: \begin{exampleblock}{}
+#+RESULTS:
+#+begin_example
+1_introduction.org
+1_introduction.org~
+1_introduction.pdf
+1_introduction.tex
+1_introduction.tex~
+2_basic_commands.org
+2_basic_commands.org~
+2_basic_commands.pdf
+2_basic_commands.tex
+2_basic_commands.tex~
+figures
+talk_16_06_21_Inria_journees_scientifiques.org
+#+end_example
+#+Latex: \end{exampleblock}
+*** ls
+Command options:
+- \bashcmd{ls -l} detailed (long) listing
+- \bashcmd{ls --color=auto} colored output (GNU only)
+- \bashcmd{ls -F} file type information
+- \bashcmd{ls -s} print allocated size in blocks
+- \bashcmd{ls -h} human readable sizes with \bashcmd{-s / -l}
+- \bashcmd{ls -m} print with comma
+- \bashcmd{ls -a} list all entries
+*** cp
+\bashcmd{cp} copies files. To copy a file to your home directory:
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+cp foo bar
+#+end_src
+#+LaTex: \end{block}
+To copy a number of files to you home:
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+cp *.txt /tmp
+#+end_src
+#+LaTex: \end{block}
+Options:
+- \bashcmd{cp -r} copy directories
+- \bashcmd{cp -a} archive mode (copy with permissions)
+- \bashcmd{cp -i} prompt before overwrite an existing file
+- \bashcmd{cp -n} do not overwrite an existing file
+- \bashcmd{cp -v} verbose mode
+*** mv
+The \bashcmd{mv} (move) command is like =cp=, but renames a file.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+mv foo bar
+#+end_src
+#+LaTex: \end{block}
+Options:
+- \bashcmd{mv -v}  verbose mode
+- \bashcmd{mv -i} prompt before overwrite an existing file
+*** touch
+The \bashcmd{touch} command sets the modification and access times of files. If
+the file does not exist, it is created with default permissions.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+touch foobar
+#+end_src
+#+LaTex: \end{block}
+*** rm
+The \bashcmd{rm} command attempts to remove a file. 
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+rm foobar
+#+end_src
+#+LaTex: \end{block}
+Options:
+- \bashcmd{rm -v} verbose mode
+- \bashcmd{rm -f} remove without confirmation
+- \bashcmd{rm -i} request confirmation
+- \bashcmd{rm -r} remove directories
+*** echo
+The \bashcmd{echo} command prints its arguments to the standard output.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+echo Hello Hello
+#+end_src
+#+LaTex: \end{block}
+*** Directories
+\bashcmd{cd} changes the shell's current working directory. If you omit =foodir=,
+the shell returns to the /home directory/.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+cd foodir
+#+end_src
+#+LaTex: \end{block} \pause
+\bashcmd{mkdir} creates a new directory.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+mkdir newdir
+#+end_src
+#+LaTex: \end{block} \pause
+\bashcmd{rmdir} removes a directory.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+rmdir foobar
+#+end_src
+#+LaTex: \end{block}
+** Intermediate Commands
+*** grep
+\bashcmd{grep} command prints the lines from a file or input stream that match
+an expression.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+grep root /etc/passwd
+#+end_src
+#+LaTex: \end{block}
+Options:
+- \bashcmd{grep -v} invert matching
+- \bashcmd{grep -w} whole words
+- \bashcmd{grep -n} print line number
+- \bashcmd{egrep} uses a pattern (avoid conflicts with =-=)
+- \bashcmd{zgrep} compressed files
+*** less
+\bashcmd{less} shows the contents of a file one screenful at a time. Spacebar
+goes forward, and =q= quits.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+grep ie /usr/share/dict/words | less
+#+end_src
+#+LaTex: \end{block}
+*** find and locate
+\bashcmd{find} walks a file hierarchy.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+find /usr -name *.h 
+#+end_src
+#+LaTex: \end{block}
+\bashcmd{locate} searches an index that the system builds
+periodically.
+*** head and tail
+To quickly view a portion of a file, use \bashcmd{head} and
+\bashcmd{tail}.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+head /etc/passwd
+tail /var/log/messages
+#+end_src
+#+LaTex: \end{block}
+Options:
+- \bashcmd{head -n} or \bashcmd{tail -n} show only /n/ lines
+- \bashcmd{tail +n} print lines starting at line /n/
+*** sort
+\bashcmd{sort} sorts text and binary files by lines.
+Options:
+- \bashcmd{sort -n} numeric sort.
+- \bashcmd{sort -r} reverse order.
+- \bashcmd{sort -k f1,f2} sort by /f1/ field, then /f2/ field
+- \bashcmd{sort -t char} use /char/ as a field separator
+#+LaTex: \pause
+#+LaTex: \begin{block}{Sort only by login}
+#+begin_src sh :results output :exports both
+grep -v '#' /etc/passwd | sort -k1 -t ':' 
+#+end_src
+#+LaTex: \end{block}\pause
+#+LaTex: \begin{block}{Sort by UID user}
+#+begin_src sh :results output :exports both
+sort -k3 -t ':' -n /etc/passwd
+#+end_src
+#+LaTex: \end{block}
+*** Other commands
+- \bashcmd{pwd} outputs the name of the current working directory.
+- \bashcmd{diff} shows the differences between two text files.
+- \bashcmd{file} determine file type
+** Basic Bash
+*** Bash variables and environment
+The shell can store temporary variables, called /shell variables/,
+containing string values.
+#+LaTex: \begin{block}{Shell variable}
+#+begin_src sh :results output :exports both
+FOO=blash
+#+end_src
+#+Latex: \end{block} \pause
+An /environment variable/ is like a shell variable, but not specific to
+the shell. The main different between environment and shell variables
+is that the OS passes all your shell's environment variables to
+programs that the shell runs.
+#+LaTex: \begin{block}{Enviroment variable}
+#+begin_src sh :results output :exports both
+FOO=blash
+export FOO
+#+end_src
+#+Latex: \end{block}
+*** Bash history
+\bashcmd{history} prints the last commands issued in the bash.
+Commands:
+- \bashcmd{CTRL-R} reverse search
+- \bashcmd{history -c} clear history
+- \bashcmd{!n} execute a command at entry /n/
+*** Shell input and output
+#+LaTex: \begin{block}{Output redirection}
+To send the output of \bashcmd{ls} to a file instead of the terminal:
+#+LaTex: \vspace{-2mm}
+#+begin_src sh :results output :exports both
+ls > foo.txt
+#+end_src
+If =foo.txt= exists, the shell erases the original file. To append the
+output:
+#+LaTex: \vspace{-2mm}
+#+begin_src sh :results output :exports both
+ls >> foo.txt
+#+end_src
+#+LaTex: \end{block} \pause
+#+LaTex: \begin{block}{Pipes}
+We can also send the output of a command to the input of another
+command trough /pipes/:
+#+LaTex: \vspace{-2mm}
+#+begin_src sh :results output :exports both
+head /etc/services | tr a-z A-Z
+#+end_src
+#+Latex: \end{block} \pause
+#+LaTex: \begin{block}{Input redirection}
+It is also possible the /input redirection/:
+#+LaTex: \vspace{-2mm}
+#+begin_src sh :results output :exports both
+head < /etc/services
+#+end_src
+#+Latex: \end{block}
+** System Commands
+*** Processes
+\bashcmd{ps} displays information about all processes in the system.
+Options:
+- \bashcmd{ps x} all your running processes
+- \bashcmd{ps ax} all processes on the system
+- \bashcmd{ps u} detailed information
+- \bashcmd{ps w} show full command names
+#+LaTex: \vspace{2mm}
+#+LaTex: \pause
+\bashcmd{kill} sends a signal to a process. By default, it sends a
+=TERM=, or terminate, signal.
+Options:
+- \bashcmd{kill pid} send a =TERM= signal
+- \bashcmd{kill -STOP pid} to stop a process
+- \bashcmd{kill -CONT pid} to continue a process
+*** poweroff and shutdown
+These commands close down the system at a given time.
+- \bashcmd{shutdown -h now} system is halted now
+- \bashcmd{shutdown -r now} reboot now, similar to \bashcmd{reboot}
+- \bashcmd{shutdown -r +30 "System will reboot"} reboot the system in
+  30 minutes and display a warning message to all users
+- \bashcmd{poweroff} equivalent to \bashcmd{shutdown -p now}
+*** 
+
+
+* Tasks [25/25]                                                    :noexport:
+** DONE bash history [4/4]
+CLOSED: [2016-08-15 Seg 00:29]
+- [X] =history=
+- [X] ctrl-r
+- [X] history -c to clear history
+- [X] =!xxx= to execute a specific command
+** DONE grep
+CLOSED: [2016-08-14 Dom 23:46]
+** DONE cat
+CLOSED: [2016-08-14 Dom 22:59]
+** DONE nano vim vi
+CLOSED: [2016-08-15 Seg 00:15]
+** DONE less more
+CLOSED: [2016-08-14 Dom 23:38]
+** DONE bash variables
+CLOSED: [2016-08-15 Seg 00:24]
+Declare variable with =FOO=aaa= and =export=, test variable by =export=
+** DONE echo
+CLOSED: [2016-08-14 Dom 23:21]
+** DONE ls [4/4]
+CLOSED: [2016-08-14 Dom 22:58]
+- [X] ls -G colors
+- [X] ls -l (long)
+- [X] ls -a (all)
+- [X] ls -F (file type)
+** DONE cp
+CLOSED: [2016-08-14 Dom 22:59]
+- cp -r
+- cp -v
+- cp -i
+** DONE mv
+CLOSED: [2016-08-14 Dom 23:02]
+** DONE touch
+CLOSED: [2016-08-14 Dom 23:21]
+** DONE rm
+CLOSED: [2016-08-14 Dom 23:08]
+** DONE echo
+CLOSED: [2016-08-14 Dom 23:08]
+** DONE cd/mkdir/rmdir
+CLOSED: [2016-08-14 Dom 23:21]
+** DONE grep [3/3]
+CLOSED: [2016-08-14 Dom 23:29]
+- [X] egrep, grep -e
+- [X] zgrep, grep -Z 
+- [X] grep -v
+** DONE pwd
+CLOSED: [2016-08-14 Dom 23:38]
+** DONE diff
+CLOSED: [2016-08-14 Dom 23:38]
+** DONE file
+CLOSED: [2016-08-14 Dom 23:38]
+** DONE find/locate
+CLOSED: [2016-08-14 Dom 23:46]
+** DONE head/tail [3/3]
+CLOSED: [2016-08-14 Dom 23:46]
+- [X] head -n
+- [X] tail -n
+- [X] tail +1 (from line 1 to the end)
+** DONE sort [2/2]
+CLOSED: [2016-08-14 Dom 23:48]
+- [X] sort -n
+- [X] sort -r
+** DONE passwd/chsh
+CLOSED: [2016-08-15 Seg 00:18]
+** DONE keystrokes
+CLOSED: [2016-08-15 Seg 23:11]
+** DONE man
+CLOSED: [2016-08-15 Seg 00:09]
+man -k
+** DONE poweoff/shutdown
+CLOSED: [2016-08-15 Seg 00:06]
+
+
+* Emacs setup                                                      :noexport:
+# Local Variables:
+# eval:   (setq org-latex-listings nil)
+# End:
