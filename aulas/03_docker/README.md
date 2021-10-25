@@ -20,6 +20,15 @@ containers.
 Pode-se instalar Docker em Linux, OSX e Windows, de acordo com o link:
 - https://docs.docker.com/engine/install/
 
+Em um sistema Ubuntu basta instalar o pacote:
+```
+sudo apt install docker.io
+```
+Seu usuário precisa de permissões para criar containers adicionando no grupo `docker`:
+```
+sudo gpasswd -a jvlima docker
+```
+
 ### Comandos básicos
 Teste sua instalação com o comando:
 ```
@@ -142,6 +151,48 @@ docker volume rm meu-volume
 Os **bind mounts** são diretórios mapeados dentro do container. O caminho do diretório precisa ser absoluto sempre como no exemplo abaixo da pasta `dados`:
 ```
 docker run --rm -ti -v $(pwd)/dados:/dados ubuntu /bin/bash
+```
+
+### Redes
+
+Uma das grandes vantagens de serviços Docker é a utilização de rede para conexão independente de sistema operacional. Aqui não vamos discutir os diferentes *drivers* de rede disponíveis.
+
+Podemos mapear serviços dentro de um container Docker para o exterior por meio de mapeamento de portas como:
+```
+docker run -d -p 80:80 docker/getting-started
+```
+Basta acessar o serviço criado no link http://localhost.
+
+
+Quando criamos dois containers eles são conectados entre si pelo driver *bridge*. Porém, ambos os serviços não resolvem nomes. Por exemplo:
+```
+$ docker run -dit --name alpine1 alpine ash
+$ docker run -dit --name alpine2 alpine ash
+$ docker attach alpine1
+/ # ping -c 2 alpine2
+ping: bad address 'alpine2'
+
+$ docker container stop alpine1 alpine2
+$ docker container rm alpine1 alpine2
+```
+
+A forma mais adequada de conectar containers é com redes definidas por usuário do tipo `bridge`:
+```
+$ docker network create alpine-net
+```
+Dessa forma, podemos conectar por meio do nome do serviço:
+```
+$ docker run -dit --name alpine1 --network alpine-net alpine ash
+$ docker run -dit --name alpine2 --network alpine-net alpine ash
+$ docker container attach alpine1
+/ # ping -c 2 alpine2
+PING alpine2 (172.18.0.3): 56 data bytes
+64 bytes from 172.18.0.3: seq=0 ttl=64 time=0.290 ms
+64 bytes from 172.18.0.3: seq=1 ttl=64 time=0.189 ms
+
+--- alpine2 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.189/0.239/0.290 ms
 ```
 
 ## Pacotes com APT
@@ -287,3 +338,5 @@ vim-tiny: /usr/share/doc/vim-tiny
 - https://www.debian.org/doc/manuals/apt-howto/index.pt-br.html
 - https://help.ubuntu.com/lts/serverguide/apt.html
 - https://docs.docker.com/get-started/
+- https://docs.docker.com/storage/
+- https://docs.docker.com/network/network-tutorial-standalone/
