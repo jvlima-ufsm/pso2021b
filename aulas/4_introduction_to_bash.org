@@ -1,0 +1,560 @@
+#+TITLE: Introduction to Bash Scripting
+#+SUBTITLE: Operating System Practice
+#+DATE: March 25, 2019
+#+AUTHOR: João Vicente Ferreira Lima
+#+EMAIL: jvlima@inf.ufsm.br
+#+OPTIONS: H:3 num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+LATEX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [xcolor=dvipsnames, 11pt, presentation]
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode 8.3.4)
+#+TAGS: noexport(n)
+#+STARTUP: beamer overview indent
+#+BEAMER_FRAME_LEVEL: 2
+#+BEAMER_THEME: Madrid
+#+BEAMER_HEADER: \institute[UFSM]{Universidade Federal de Santa Maria \\ \url{jvlima@inf.ufsm.br} \\ \url{http://www.inf.ufsm.br/~jvlima}}
+#+LATEX_HEADER: \setbeamertemplate{footline}[frame number]
+#+LATEX_HEADER: \usecolortheme[named=BrickRed]{structure}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage[american]{babel}
+#+LATEX_HEADER: \usepackage{url} \urlstyle{sf}
+#+LATEX_HEADER: \useinnertheme{circles}
+#+LATEX_HEADER: \let\alert=\structure
+#+LATEX_HEADER: \usepackage{wrapfig}
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \newcommand{\bashcmd}[1]{\textcolor{White}{\colorbox{Sepia}{\texttt{#1}}}}
+#+LATEX_HEADER: 
+
+#+BEGIN_EXPORT latex
+\frame<handout:0>
+{
+  \frametitle{Outline}
+  \tableofcontents
+}
+
+\makeatletter
+\AtBeginSubsection[]
+{
+  \frame<handout:0>
+  {
+    \frametitle{Outline}
+    \tableofcontents[current,currentsubsection]
+  }
+}
+\makeatother
+#+END_EXPORT
+
+* Introduction to Bash Scripting
+** Shell Programming
+*** Shell Programming
+#+BEGIN_QUOTE
+A shell script is a quick-and-dirty method of prototyping a complex
+application. \hfill Advanced Bash Scripting Guide.
+#+END_QUOTE
+#+LaTex: \pause
+#+LaTex: \begin{block}{When not to use shell scripts}
+#+LaTex: \begin{columns}\begin{column}{0.45\textwidth}
+1. Resource-intensive tasks
+2. Heavy-duty math operations
+3. Cross-platform portability
+4. Complex applications
+5. Mission-critical applications
+6. When /security/ is important
+7. Project with subcomponents
+8. Extensive file operations
+#+LaTex: \end{column}\begin{column}{0.5\textwidth}
+9. Need native support for multi-dimensional arrays
+10. Need data structures
+11. Need to graphics or GUIs
+12. Need direct access to hardware
+13. Need port or socket I/O
+14. Need to use libraries with legacy code
+15. Proprietary applications
+#+LaTex: \end{column}\end{columns}
+#+LaTex: \end{block}
+*** Hello Bash
+#+LaTex: \begin{block}{Script \textsc{hello}}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+# this is a comment
+echo "Hello bash from user: $USER" 
+#+end_src
+#+LaTex: \end{block}\pause
+#+LaTex: \begin{block}{Turn into executable}
+#+begin_src sh :results output :exports both
+chmod u+rx hello
+#+end_src
+#+LaTex: \end{block}\pause
+#+LaTex: \begin{exampleblock}{}
+There is nothing unusual here, only a set of commands that could just
+have been invoked one by one from the command-line.
+#+LaTex: \end{exampleblock}
+*** /sha-bang/
+The /sha-bang/ (\bashcmd{\#!}) at the head of a script tells your system
+that this file is a set of commands to be fed to the command
+interpreter indicated.
+
+The \bashcmd{\#!} is a two-byte /magic number/ (type \bashcmd{man magic}).
+#+LaTex: \begin{block}{}
+#+BEGIN_EXAMPLE
+#!/bin/sh
+#!/bin/bash
+#!/bin/python
+#!/usr/bin/perl
+#!/usr/bin/tcl
+#!/bin/sed -f
+#!/bin/awk -f
+#+END_EXAMPLE
+#+LaTex: \end{block}
+*** Invoking the script
+#+LaTex: \begin{block}{Script \textsc{hello}}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+echo "I have $# arguments, they are: $*"
+#+end_src
+#+LaTex: \end{block}\pause
+#+LaTex: \begin{block}{Turn into executable}
+#+begin_src sh :results output :exports both
+chmod u+rx hello
+#+end_src
+#+LaTex: \end{block}\pause
+#+LaTex: \begin{exampleblock}{Executing}
+#+begin_src sh :results output :exports both
+./hello here is my argument
+#+end_src
+#+LaTex: \end{exampleblock}
+** Variables
+*** Variable substitution
+The name of a variable is a placeholder for its /value/. Referencing its
+value is called /variable substitution/.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+a=375
+hello=$a
+#+end_src
+#+LaTex: \end{block}
+No space permitted on either side of /=/ sign. 
+\pause
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+echo hello
+#+end_src
+#+LaTex: \end{block}
+Not a variable reference, just the string "hello" 
+\pause
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+echo $hello
+echo ${hello}
+#+end_src
+#+LaTex: \end{block}
+No difference, result is =375=.
+*** Variable substitution
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+hello="A B    C"
+echo $hello
+echo "$hello"
+#+end_src
+#+LaTex: \end{block}
+Quoting a variable preserves whitespaces.
+\pause
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+echo '$hello'
+#+end_src
+#+LaTex: \end{block}
+Variable referencing disabled by single quotes.
+*** Variable substitution
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+a=`echo Hello!`
+echo $a
+#+end_src
+#+LaTex: \end{block}
+Assigns result of /echo/ command to /a/ using backquotes.
+\pause
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+a=`ls -l`
+echo $a
+echo
+echo "$a"
+#+end_src
+#+LaTex: \end{block}
+Assings result of =ls -l= command to /a/. First /echo/ removes tabs and
+newlines, and the second prevers whitespaces.
+\pause
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+host=$(cat /etc/hostname)
+system=$(uname -a)
+#+end_src
+#+LaTex: \end{block}
+Using the =$(...)= mechanism.
+*** Quoting variables
+Use double quotes to prevent word splitting.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+numbers="one two three"
+
+for a in $numbers
+do
+    echo "$a"
+done
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{exampleblock}{}
+#+BEGIN_EXAMPLE
+one
+two
+three
+#+END_EXAMPLE
+#+LaTex: \end{exampleblock}
+*** Quoting variables
+Use double quotes to prevent word splitting.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+numbers="one two three"
+
+for a in "$numbers"
+do
+    echo "$a"
+done
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{exampleblock}{}
+#+BEGIN_EXAMPLE
+one two three
+#+END_EXAMPLE
+#+LaTex: \end{exampleblock}
+*** Escaping
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+echo "This will print
+as two lines."
+
+echo
+
+echo "This will print \
+as one line."
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{exampleblock}{}
+#+BEGIN_EXAMPLE
+This will print
+as two lines.
+
+This will print as one line.
+#+END_EXAMPLE
+#+LaTex: \end{exampleblock}
+*** Escaping
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+echo "\n\n"     # prints \n\n
+echo -e "\n\n"  # prints two new lines
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+BEGIN_EXPORT latex
+\begin{exampleblock}{}
+\begin{verbatim}
+\n\n
+
+
+\end{verbatim}
+\end{exampleblock}
+#+END_EXPORT
+** Special variables
+*** Parameters
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+echo "Number of parameters: $#"
+echo "Parameter #1 is $1"
+echo "Parameter #2 is $2"
+echo "Parameter #10 is ${10}"
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{block}{Executing}
+#+begin_src sh :results output :exports both
+./helloparams 1 2 3 4 5 6 7 8 9 10 11 12
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{exampleblock}{Output}
+#+BEGIN_EXAMPLE
+Number of parameters: 12
+Parameter #1 is 1
+Parameter #2 is 2
+Parameter #10 is 10
+#+END_EXAMPLE
+#+LaTex: \end{exampleblock}
+*** Exit and exit status
+The /exit/ command terminates a script, just as in a C program. It can
+also return a value.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+echo hello
+echo $?
+
+lalalal
+echo $?
+
+exit 113
+#+end_src
+#+LaTex: \end{block}
+The script executes an /echo/, and then a unrecognized command.
+\pause
+#+LaTex: \begin{exampleblock}{}
+#+BEGIN_EXAMPLE
+0
+127
+#+END_EXAMPLE
+#+LaTex: \end{exampleblock}
+
+** Test constructs
+*** Test constructs
+#+LaTex: \begin{block}{If/else}
+#+begin_src sh :results output :exports both
+if [ condition-true ]
+then
+    command 1
+    command 2
+else
+    command 3
+    command 4
+fi
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{alertblock}{Warning}
+In Bash, true is 0 (since 0 means /success/ by UNIX convention).
+#+LaTex: \end{alertblock}
+*** Test constructs
+#+LaTex: \begin{block}{If/elif/else}
+#+begin_src sh :results output :exports both
+if [ condition1 ]
+then
+    command 1
+    command 2
+elif [ condition2 ]
+    command 3
+    command 4
+else
+    default-command
+fi
+#+end_src
+#+LaTex: \end{block}
+*** Test constructs
+- \bashcmd{[} is a /command/, a synonym for \bashcmd{test}
+- \bashcmd{[[} is a keyword for an /extended test command/. 
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+bash$ type test
+test is a shell builtin
+bash$ type '['
+[ is a shell builtin
+bash$ type '[['
+[[ is a shell keyword
+bash$ type ']]'
+]] is a shell keyword
+bash$ type ']'
+bash: type: ]: not found
+#+end_src
+#+LaTex: \end{block}
+*** Test constructs
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+if [ 0 ]; then
+    echo "0 is true."
+else
+    echo "0 is false."
+fi
+
+if [ 1 ]; then
+    echo "1 is true."
+else
+    echo "1 is false."
+fi
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{exampleblock}{}
+#+begin_src sh :results output :exports both
+0 is true.
+1 is true.
+#+end_src
+#+LaTex: \end{exampleblock}
+*** Test constructs
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+# the -q option to grep suppresses output
+if grep -q root /etc/passwd; then
+    echo "Root exists."
+fi
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{exampleblock}{Output}
+#+begin_src sh :results output :exports both
+Root exists.
+#+end_src
+#+LaTex: \end{exampleblock}
+*** Test constructs
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+decimal=15
+octal=017   # = 15 (decimal)
+hex=0x0f    # = 15 (decimal)
+
+if [ "$decimal" -eq "$octal" ]
+then
+  echo "$decimal equals $octal"
+else
+  echo "$decimal is not equal to $octal"
+  # 15 is not equal to 017
+fi
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{exampleblock}{Result}
+Doesn't evaluate within [ single brackets ]!
+#+LaTex: \end{exampleblock}
+*** Test constructs
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+decimal=15
+octal=017   # = 15 (decimal)
+hex=0x0f    # = 15 (decimal)
+
+if [[ "$decimal" -eq "$octal" ]]
+then
+  echo "$decimal equals $octal"   # 15 equals 017
+else
+  echo "$decimal is not equal to $octal"
+fi
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{exampleblock}{Result}
+Evaluates within =[[= double brackets =]]=!
+#+LaTex: \end{exampleblock}
+*** Test constructs
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+decimal=15
+octal=017   # = 15 (decimal)
+hex=0x0f    # = 15 (decimal)
+
+if [[ "$decimal" -eq "$hex" ]]
+then
+  echo "$decimal equals $hex"   # 15 equals 0x0f
+else
+  echo "$decimal is not equal to $hex"
+fi
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{exampleblock}{Result}
+=[[= $hexadecimal =]]= also evaluates!
+#+LaTex: \end{exampleblock}
+*** File test operators
+Returns true if ...
+1. \bashcmd{-e} file exists
+2. \bashcmd{-f} file is a /regular/ file
+3. \bashcmd{-s} file is not zero size
+4. \bashcmd{-d} file is a directory
+5. \bashcmd{-r} file has read permission
+6. \bashcmd{-w} file has write permission
+7. \bashcmd{-x} file has execute permission 
+*** File test operators
+#+LaTex: \begin{block}{Simple tests}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+if [ -e hello ]; then
+    echo "File hello exists."
+else
+    echo "hello is not here!."
+fi
+
+if [ -r /etc/shadow ]; then
+    echo "WARN: I can read passwords!"
+fi
+#+end_src
+#+LaTex: \end{block}
+*** Other comparison operators
+Integer comparison:
+1. \bashcmd{-eq} is equal to
+2. \bashcmd{-ne} is not equal to
+3. \bashcmd{-gt} is greater than
+4. \bashcmd{-ge} is greater than or equal to
+5. \bashcmd{-lt} is less than
+6. \bashcmd{-le} is less than or equal to
+#+LaTex: \begin{block}{Use of integer comparison}
+#+begin_src sh :results output :exports both
+if [ "$a" -eq "$b" ]; then
+    echo "Equals!"
+fi
+#+end_src
+#+LaTex: \end{block}
+*** Other comparison operators
+String comparison:
+1. \bashcmd{==} is equal to
+2. \bashcmd{!=} is not equal to
+3. \bashcmd{<} is less than
+4. \bashcmd{>} is greater than
+5. \bashcmd{-z} string is /null/
+6. \bashcmd{-n} string is not /null/
+#+LaTeX: \begin{alertblock}{Warning}
+Using an unquoted string is an unsafe practice. /Always/ quote a tested
+string.
+#+LaTeX: \end{alertblock}
+*** Other comparison operators
+Compound comparison:
+1. \bashcmd{-a} logical and
+2. \bashcmd{-o} logical or
+3. \bashcmd{\&\&} logical and inside =[[=
+4. \bashcmd{||} logical or inside =[[=
+#+LaTex: \begin{block}{Compound comparison}
+#+begin_src sh :results output :exports both
+if [ 1 -eq 2 -o 2 -ne 3 ]; then
+    echo "True"
+fi
+
+if [[ "$USER" == "root" && 2 -eq 2 ]]; then
+    echo "Also true"
+fi
+#+end_src
+#+LaTex: \end{block}
+*** 
+
+
+* Tasks [0/0]                                                      :noexport:
+** 
+
+
+* Emacs setup                                                      :noexport:
+# Local Variables:
+# eval:   (setq org-latex-listings nil)
+# End:

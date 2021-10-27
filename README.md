@@ -16,7 +16,7 @@ Horários: segundas e quartas, 16:30 às 18:30.
 |  2 | 2021-10-18  Seg  | Introdução a Sistemas Operacionais ([vídeo 1](https://youtu.be/7KsHiozYhv4), [vídeo 2](https://youtu.be/DmxuID5tytE), [slide 1](https://drive.google.com/file/d/1BQPPeJmC0gmnA5f-5WTr5sE5s3Sq8nUt/view?usp=sharing), [slide 2](./aulas/01_introducao/1_introduction.pdf))  |
 | 3 | 2021-10-20  Qua | Basic Shell Commands ([vídeo](https://youtu.be/c8mYuwKTCfU), [slides](./aulas/2_basic_commands.pdf))  |
 | 4 | 2021-10-25  Seg | [Prática - Docker](./aulas/03_docker) |
-| 5 | 2021-10-27  Qua | Introduction to Bash |
+| 5 | 2021-10-27  Qua | Introduction to Bash ([vídeo](https://youtu.be/3CL-qslLXWM), [slides](./aulas/4_introduction_to_bash.pdf)) |
 | 6 | 2021-11-03  Qua | Prática - Ordenação em Bash |
 | 7 | 2021-11-08  Seg | Bash Scripting |
 | 8 | 2021-11-10  Qua | Prática |
