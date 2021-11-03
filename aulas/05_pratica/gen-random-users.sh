@@ -61,8 +61,9 @@ genLine(){
     lastname=$(echo $name | sed 's/.* //g')
     username=$(echo $firstname$lastname | tr '[A-Z]' '[a-z]')
     #echo $name $username $team $age
-    #echo "$username|$name|$team|$age|/home/alunos/$username"
-    echo "$username,$name,$team,$age,/home/alunos/$username"
+    echo "$username|$name|$team|$age"
+#    echo "$username|$name|$team|$age|/home/alunos/$username"
+    #echo "$username,$name,$team,$age,/home/alunos/$username"
 }
 
 # seed
@@ -87,7 +88,7 @@ do
    allnames[i]="$prenom ${nom[@]}"
 done
 
-echo "login,name,group,age,home"
+#echo "login|name|group|age|home"
 for n in "${allnames[@]}"
 do
     team=${teams[$((RANDOM % ${#teams[@]}))]}
