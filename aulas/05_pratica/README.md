@@ -17,7 +17,7 @@ tarefa:
 
 Formato de entrada:
 ``` 
-login|name|group|age|home
+login|name|group|age
 ```
 
 Exemplo de entrada: [a6-input-example.txt](./a6-input-example.txt). Para gerar novas
@@ -26,28 +26,55 @@ entradas, use o script [gen-random-users.sh](./gen-random-users.sh).
 Cada agrupamento começa com 2 espaços antes de cada linha. A saída esperada será:
 ```
 Task 1:
-  Ana Novaes Alves
-  Ana Pinto Rocha
-  .......
-  Rafael Nascimento Rezende
+  Ana Mendes Alves
+  Antonio Alves Barbosa
+  Francisco Rezende Campos
+  Francisco Barbosa Lima
+  Francisco Barros Rodrigues
+  Gabriel Freitas Gomes
+  Jose Moura Pereira
+  Luiz Novaes Martins
+  Maria Barbosa Monteiro
+  Paulo Cavalcanti Ribeiro
 Task 2:
-  Ana Novaes Alves
-  .......
-  Gabriel Santos Pinto
-  Gabriel Mendes Rodrigues
-  .......
-  Rafael Nascimento Rezende
+  Ana Mendes Alves
+  Antonio Alves Barbosa
+  Francisco Barbosa Lima
+  Francisco Barros Rodrigues
+  Francisco Rezende Campos
+  Gabriel Freitas Gomes
+  Jose Moura Pereira
+  Luiz Novaes Martins
+  Maria Barbosa Monteiro
+  Paulo Cavalcanti Ribeiro
 Task 3:
-  inf2000:
-    Francisco Gomes Castro
-    Ana Pinto Rocha
   inf2001:
-    .........
+    Francisco Rezende Campos
+  inf2002:
+    Jose Moura Pereira
+    Francisco Barros Rodrigues
+  inf2003:
+    Paulo Cavalcanti Ribeiro
+  inf2004:
+    Maria Barbosa Monteiro
+    Antonio Alves Barbosa
+  inf2005:
+    Francisco Barbosa Lima
+  inf2006:
+    Luiz Novaes Martins
+    Gabriel Freitas Gomes
+    Ana Mendes Alves
 Task 4:
-  Maria Silva Campos
-  Gabriel Cardoso Castro
-  Gabriel Mendes Rodrigues
-  ..........
+  Antonio Alves Barbosa
+  Paulo Cavalcanti Ribeiro
+  Francisco Barbosa Lima
+  Jose Moura Pereira
+  Luiz Novaes Martins
+  Ana Mendes Alves
+  Francisco Rezende Campos
+  Maria Barbosa Monteiro
+  Francisco Barros Rodrigues
+  Gabriel Freitas Gomes
 ```
 
 Uma execução de teste deve ser feita de acordo com o comando abaixo:
