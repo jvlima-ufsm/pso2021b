@@ -1,0 +1,10 @@
+jcavalcanti|Joao Pereira Cavalcanti|inf2006|7|/home/alunos/jcavalcanti
+arocha|Ana Pinto Rocha|inf2000|77|/home/alunos/arocha
+gpinto|Gabriel Santos Pinto|inf2002|48|/home/alunos/gpinto
+rrezende|Rafael Nascimento Rezende|inf2003|94|/home/alunos/rrezende
+grodrigues|Gabriel Mendes Rodrigues|inf2008|44|/home/alunos/grodrigues
+mcampos|Maria Silva Campos|inf2003|27|/home/alunos/mcampos
+fcastro|Francisco Gomes Castro|inf2000|86|/home/alunos/fcastro
+ralves|Rafael Barros Alves|inf2009|83|/home/alunos/ralves
+aalves|Ana Novaes Alves|inf2001|9|/home/alunos/aalves
+gcastro|Gabriel Cardoso Castro|inf2006|31|/home/alunos/gcastro
