@@ -67,8 +67,9 @@ Uma função em `bash` tem o seguinte formato:
 #!/bin/bash
 
 tarefa1(){
-    echo "Chamada de funcao aqui"
+    echo "Task 1:"
+    cat $1 |  sort -t'|' -k 1|cut -d '|' -f2 | sed 's/\(.*\)/  \1/g'
 }
 
-tarefa1
+tarefa1 $1
 ```
