@@ -60,9 +60,9 @@ Uma função em `bash` tem o seguinte formato:
 ```sh
 #!/bin/bash
 
-foo(){
+tarefa1(){
     echo "Chamada de funcao aqui"
 }
 
-foo
+tarefa1
 ```
