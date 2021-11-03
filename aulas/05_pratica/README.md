@@ -52,7 +52,7 @@ Task 4:
 
 Uma execução de teste deve ser feita de acordo com o comando abaixo:
 ```sh
-$ ./t1.sh < a6-input-example.txt
+$ ./t1.sh a6-input-example.txt
 ```
 
 **Comandos básicos** - `cat`, `sort`, `uniq`, `cut`.
