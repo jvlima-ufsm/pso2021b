@@ -50,10 +50,16 @@ Task 4:
   ..........
 ```
 
+Uma execução de teste deve ser feita de acordo com o comando abaixo:
+```sh
+$ ./t1.sh < a6-input-example.txt
+```
+
 **Comandos básicos** - `cat`, `sort`, `uniq`, `cut`.
 
 Dicas:
 - Organize cada tarefa em funções Bash
+- Nomeie o nome do arquivo como `t1.sh`
 - Procure informações sobre as opções em cada comando
 
 Uma função em `bash` tem o seguinte formato:
