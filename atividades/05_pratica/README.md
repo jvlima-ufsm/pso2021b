@@ -84,7 +84,8 @@ $ ./t1.sh a6-input-example.txt
 
 **Comandos básicos** - `cat`, `sort`, `uniq`, `cut`.
 
-Dicas:
+## Dicas
+
 - Organize cada tarefa em funções Bash
 - Nomeie o nome do arquivo como `t1.sh`
 - Procure informações sobre as opções em cada comando
