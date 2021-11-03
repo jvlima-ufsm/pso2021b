@@ -17,8 +17,8 @@ Horários: segundas e quartas, 16:30 às 18:30.
 | 3 | 2021-10-20  Qua | Basic Shell Commands ([vídeo](https://youtu.be/c8mYuwKTCfU), [slides](./aulas/2_basic_commands.pdf))  |
 | 4 | 2021-10-25  Seg | [Prática - Docker](./aulas/03_docker) |
 | 5 | 2021-10-27  Qua | Introduction to Bash ([vídeo](https://youtu.be/3CL-qslLXWM), [slides](./aulas/4_introduction_to_bash.pdf)) |
-| 6 | 2021-11-03  Qua | [Prática - Ordenação em Bash](./aulas/05_pratica)  |
-| 7 | 2021-11-08  Seg | Bash Scripting |
+| 6 | 2021-11-03  Qua | [Prática - Ordenação em Bash](./atividades/05_pratica)  |
+| 7 | 2021-11-08  Seg | Bash Scripting (vídeo, [slides](./aulas/06_bash_scripting/6_bash_scripting.pdf)) |
 | 8 | 2021-11-10  Qua | Prática |
 | 9 | 2021-11-17  Qua | Introduction to Python |
 | 10 | 2021-11-22  Seg | Prática |

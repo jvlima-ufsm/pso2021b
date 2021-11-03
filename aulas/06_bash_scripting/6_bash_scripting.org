@@ -1,0 +1,769 @@
+#+TITLE: Bash Scripting
+#+SUBTITLE: Operating System Practice
+#+DATE: 2021/2
+#+AUTHOR: João Vicente Ferreira Lima
+#+EMAIL: jvlima@inf.ufsm.br
+#+OPTIONS: H:3 num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+LATEX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [xcolor=dvipsnames, 10pt, presentation,aspectratio=169]
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode 8.3.4)
+#+TAGS: noexport(n)
+#+STARTUP: beamer overview indent
+#+BEAMER_FRAME_LEVEL: 2
+#+BEAMER_THEME: Madrid
+#+BEAMER_HEADER: \institute[UFSM]{Universidade Federal de Santa Maria \\ \url{jvlima@inf.ufsm.br} \\ \url{http://www.inf.ufsm.br/~jvlima}}
+#+LATEX_HEADER: \setbeamertemplate{footline}[frame number]
+#+LATEX_HEADER: \usecolortheme[named=BrickRed]{structure}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage[american]{babel}
+#+LATEX_HEADER: \usepackage{url} \urlstyle{sf}
+#+LATEX_HEADER: \useinnertheme{circles}
+#+LATEX_HEADER: \let\alert=\structure
+#+LATEX_HEADER: \usepackage{wrapfig}
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \newcommand{\bashcmd}[1]{\textcolor{White}{\colorbox{Sepia}{\texttt{#1}}}}
+
+#+begin_comment
+#+LATEX_HEADER: \usepackage{listings}
+#+LATEX_HEADER: 
+
+#+LATEX_HEADER: \lstset{
+#+LATEX_HEADER:  language=bash,
+#+LATEX_HEADER:  aboveskip=0pt,
+#+LATEX_HEADER:  belowskip=0pt,
+#+LATEX_HEADER:  mathescape=false
+#+LATEX_HEADER: }
+#+end_comment
+
+#+begin_export latex
+\frame<handout:0>
+{
+  \frametitle{Outline}
+  \tableofcontents
+}
+
+\makeatletter
+\AtBeginSubsection[]
+{
+  \frame<handout:0>
+  {
+    \frametitle{Outline}
+    \tableofcontents[current,currentsubsection]
+  }
+}
+\makeatother
+#+end_export
+
+* Bash Scripting
+** Arithmetic Operations
+*** Arithmetic operations
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+# Counting to 11 in 10 different ways.
+
+n=1; echo -n "$n "
+
+let "n = $n + 1"   # let "n = n + 1"  also works.
+echo -n "$n "
+
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{alertblock}{No floating point}
+Bash does not understand floating point arithmetic. It treats numbers
+containing a decimal point as strings.
+#+LaTex: \end{alertblock}
+*** Arithmetic operations
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+: $((n = $n + 1))
+#  ":" necessary because otherwise Bash attempts
+#+ to interpret "$((n = $n + 1))" as a command.
+echo -n "$n "
+
+(( n = n + 1 ))
+#  A simpler alternative to the method above.
+echo -n "$n "
+
+n=$(($n + 1))
+echo -n "$n "
+#+end_src
+#+LaTex: \end{block}
+*** Arithmetic operations
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+: $[ n = $n + 1 ]
+#  ":" necessary because otherwise Bash attempts
+#+ to interpret "$[ n = $n + 1 ]" as a command.
+#  Works even if "n" was initialized as a string.
+echo -n "$n "
+
+n=$[ $n + 1 ]
+#  Works even if "n" was initialized as a string.
+#* Avoid this type of construct, since it is obsolete and nonportable.
+echo -n "$n "
+#+end_src
+#+LaTex: \end{block}
+*** Arithmetic operations
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+# Now for C-style increment operators.
+let "n++"          # let "++n"  also works.
+echo -n "$n "
+
+(( n++ ))          # (( ++n ))  also works.
+echo -n "$n "
+
+: $(( n++ ))       # : $(( ++n )) also works.
+echo -n "$n "
+
+: $[ n++ ]         # : $[ ++n ] also works
+echo -n "$n "
+
+exit 0
+#+end_src
+#+LaTex: \end{block}
+** Variables
+*** Internal variables
+Builtin variables:
+- \bashcmd{\$BASH} path to the Bash itself
+- \bashcmd{\$BASH\_VERSION} version of Bash
+- \bashcmd{\$EDITOR} the default editor
+- \bashcmd{\$HOME} home directory
+- \bashcmd{\$PATH} path to binaries
+- \bashcmd{\$PWD} working directory
+- \bashcmd{\$UID} user ID number
+Positional variables:
+- \bashcmd{\$?} exit status  of a command
+- \bashcmd{\$\$} process ID (PID)
+*** Random
+\bashcmd{RANDOM} is a internal Bash function that returns a
+/pseudorandom/ integer in 0 - 32767.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+RANDOM=$$      #  Seeds the random number generator from PID
+               #+ of script.
+
+for i in $(seq 1 10)
+do
+    echo $RANDOM
+done
+#+end_src
+#+LaTex: \end{block}
+** Strings
+*** Manipulating strings
+*String length* - =${#string}=
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+stringZ=abcABC123ABCabc
+
+echo ${#stringZ}     # 15
+#+end_src
+#+LaTex: \end{block}
+*Substring extraction* - =${string:position:length}=
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+stringZ=abcABC123ABCabc
+echo ${stringZ:7}            # 23ABCabc
+echo ${stringZ:7:3}          # 23A
+                             # Three characters of substring.
+#+end_src
+#+LaTex: \end{block}
+*** Manipulating strings
+#+LaTex: \begin{block}{Random password}
+#+begin_src sh :results output :exports both
+if [ -n "$1" ]  #  If command-line argument present,
+then            #+ then set start-string to it.
+  str0="$1"
+else            #  Else use PID of script as start-string.
+  str0="$$"
+fi
+POS=2  # Starting from position 2 in the string.
+LEN=8  # Extract eight characters.
+
+str1=$( echo "$str0" | md5sum | md5sum )
+#  Doubly scramble     ^^^^^^   ^^^^^^
+
+randstring="${str1:$POS:$LEN}"
+
+echo "$randstring"
+#+end_src
+#+LaTex: \end{block}
+*** Manipulating strings
+*Substring removal* - =${string#substring}= deletes shortest match,
+ =${string##substring}= deletes longest match.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+stringZ=abcABC123ABCabc
+#       |----|          shortest
+#       |----------|    longest
+
+echo ${stringZ#a*C}      # 123ABCabc
+# Strip out shortest match between 'a' and 'C'.
+
+echo ${stringZ##a*C}     # abc
+# Strip out longest match between 'a' and 'C'.
+#+end_src
+#+LaTex: \end{block}
+*** Manipulating strings
+*Substring replacement* - =${string/substring/replacement}=, replace first
+ /match/ of =$substring= with =$replacement=.
+
+*Substring replacement* - =${string//substring/replacement}=, replace all
+ matches of =$substring= with =$replacement=.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+stringZ=abcABC123ABCabc
+
+echo ${stringZ/abc/xyz}  # xyzABC123ABCabc
+              # Replaces first match of 'abc' with 'xyz'.
+
+echo ${stringZ//abc/xyz} # xyzABC123ABCxyz
+              # Replaces all matches of 'abc' with # 'xyz'.
+#+end_src
+#+LaTex: \end{block}
+** Parameter substitution
+*** Parameter substitution
+Manipulating and/or expanding variables:
+- =${parameter}=
+- =${parameter-default}= if parameter not set, use =default=.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+echo ${username-`whoami`}
+# Echoes the result of `whoami`, if variable $username 
+# is still unset.
+
+DEFAULT_FILENAME=generic.data
+filename=${1-$DEFAULT_FILENAME}
+#  if parameter $1 is not specified
+#+end_src
+#+LaTex: \end{block}
+*** Parameter substitution
+=${parameter=default}= - If parameter not set, set it to /default/.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+echo ${var=abc}   # abc
+echo ${var=xyz}   # abc
+# $var had already been set to abc, so it did not change.
+#+end_src
+#+LaTex: \end{block}
+** Loops
+*** for
+#+LaTex: \begin{block}{Parameterized file list}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+filename="*txt"
+
+for file in $filename
+do
+ echo "Contents of $file"
+ echo "---"
+ cat "$file"
+ echo
+done
+#+end_src
+#+LaTex: \end{block}
+*** for
+#+LaTex: \begin{block}{File expansion}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+# Globbing = filename expansion.
+
+for file in *
+#           ^  Bash performs filename expansion
+#+             on expressions that globbing recognizes.
+do
+    if [ -d "$file" ]; then
+        echo "$file is a directory"
+    fi
+    if [ -f "$file" ]; then
+        echo "$file is a regular file."
+    fi
+done
+
+exit 0
+#+end_src
+#+LaTex: \end{block}
+*** for
+#+LaTex: \begin{block}{Function}
+#+begin_src sh :results output :exports both
+generate_list ()
+{
+  echo "one two three"
+}
+
+for word in $(generate_list)  # Let "word" grab output of function.
+do
+  echo "$word"
+done
+#+end_src
+#+LaTex: \end{block}
+*** for
+#+LaTex: \begin{block}{Counting to ten}
+#+begin_src sh :results output :exports both
+# Using "seq" ...
+for a in `seq 10`
+do
+  echo -n "$a "
+done  
+
+echo; echo
+#+end_src
+#+LaTex: \end{block}
+*** for
+#+LaTex: \begin{block}{Counting to ten}
+#+begin_src sh :results output :exports both
+# Now, let's do the same, using C-like syntax.
+
+LIMIT=10
+# Double parentheses, and naked "LIMIT"
+for ((a=1; a <= LIMIT ; a++))
+do
+  echo -n "$a "
+done
+
+echo; echo
+#+end_src
+#+LaTex: \end{block}
+*** while
+#+LaTex: \begin{block}{While to ten}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+var0=0
+LIMIT=10
+
+while [ "$var0" -lt "$LIMIT" ]
+do
+  echo -n "$var0 "        # -n suppresses newline.
+
+  var0=$(($var0+1))
+done
+
+echo
+exit 0
+#+end_src
+#+LaTex: \end{block}
+*** while
+#+LaTex: \begin{block}{Test to end}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+                           # Equivalent to:
+while [ "$var1" != "end" ] # while test "$var1" != "end"
+do
+  echo "Input variable #1 (end to exit) "
+  read var1                   # Not 'read $var1' (why?).
+  echo "variable #1 = $var1"  # Need quotes because of "#" . . .
+  # If input is 'end', echoes it here.
+  echo
+done  
+
+exit 0
+#+end_src
+#+LaTex: \end{block}
+*** while
+#+LaTex: \begin{block}{C-style while}
+#+begin_src sh :results output :exports both
+LIMIT=10      # 10 iterations.
+((a = 1))      # a=1
+
+while (( a <= LIMIT ))   #  Double parentheses,
+do                       #+ and no "$" preceding variables.
+  echo -n "$a "
+  ((a += 1))             # let "a+=1"
+done
+
+echo
+exit 0
+#+end_src
+#+LaTex: \end{block}
+*** while
+#+LaTex: \begin{block}{While and pipes}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+ps aux | \
+while read user pid cpu mem vsz rss tty stat start time command
+do
+    echo $pid $mem $command
+done | sort -n -r -k2
+
+# sorts by memory usage
+
+exit 0
+#+end_src
+#+LaTex: \end{block}
+*** while
+#+LaTex: \begin{block}{Reading files}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+IFS=':' # internal field separator
+
+while read account password uid gid gecos directory shell
+do
+    echo $uid $account
+done < /etc/passwd
+
+exit 0
+#+end_src
+#+LaTex: \end{block}
+*** until
+This construct tests for a condition at the top of a loop, and keeps
+looping as long as that condition is /false/ (opposite of /while loop/).
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+LIMIT=10
+var=0
+
+until (( var > LIMIT ))
+do
+  echo -n "$var "
+  (( var++ ))
+done    # 0 1 2 3 4 5 6 7 8 9 10 
+
+
+exit 0
+#+end_src
+#+LaTex: \end{block}
+*** Loop control
+The \bashcmd{break} and \bashcmd{continue} loop control commands
+correspond exactly to their counterparts in other programming
+languages.
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+LIMIT=19  # Upper limit
+echo "Printing Numbers 1 through 20 (but not 3 and 11)."
+a=0
+while [ $a -le "$LIMIT" ]
+do
+ a=$(($a+1))
+
+ if [ "$a" -eq 3 ] || [ "$a" -eq 11 ]; then
+   continue
+ fi
+
+ echo -n "$a "   # This will not execute for 3 and 11.
+done 
+#+end_src
+#+LaTex: \end{block}
+
+** Functions
+*** Functions
+#+LaTex: \begin{block}{Simple functions}
+#+begin_src sh :results output :exports both
+fun () { echo "This is a function"; echo; }
+
+foo() {
+    echo "foo"
+}
+
+fun
+foo
+#+end_src
+#+LaTex: \end{block}
+*** Functions
+#+LaTex: \begin{block}{Arguments (1/2)}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+DEFAULT=default 
+func2 () {
+   if [ -z "$1" ]; then
+     echo "-Parameter #1 is zero length.-" 
+   else
+     echo "-Parameter #1 is \"$1\".-"
+   fi
+   variable=${1-$DEFAULT} 
+   echo "variable = $variable"
+   if [ "$2" ]; then
+     echo "-Parameter #2 is \"$2\".-"
+   fi
+
+   return 0
+}
+#+end_src
+#+LaTex: \end{block}
+*** Functions
+#+LaTex: \begin{block}{Arguments (2/2)}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+echo "Two parameters passed."   
+func2 first second  # Called with two params
+echo
+
+echo "\"\" \"second\" passed."
+func2 "" second  # Called with zero-length first parameter
+echo             # and ASCII string as a second one.
+
+exit 0
+#+end_src
+#+LaTex: \end{block}
+*** Functions
+Functions return a value, called an /exit status/. This is analogous to
+the exit status returned by a command.
+#+LaTex: \begin{block}{Exit status}
+#+begin_src sh :results output :exports both
+
+E_PARAM_ERR=250 # if no parameter
+foo () {
+   if [ -z "$1" ]; then
+       return $E_PARAM_ERR
+   fi
+   return 0
+}
+
+foo ; res=$?
+if [ "$res" -eq $E_PARAM_ERR ]; then
+    echo "Missing parameter ..."
+fi
+exit 0
+#+end_src
+#+LaTex: \end{block}
+*** Functions
+In contrast to C, a Bash variable declared inside a function is local
+ONLY if declared as such.
+#+LaTex: \begin{block}{Global or local}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+func () {
+  local loc_var=23       # Declared as local variable.
+  global_var=999         # Not declared as local.
+ }  
+func
+
+echo "\"loc_var\" outside function = $loc_var"
+
+echo "\"global_var\" outside function = $global_var"
+
+exit 0
+#+end_src
+#+LaTex: \end{block}
+** Arrays
+*** Arrays
+#+LaTex: \begin{block}{Sparse arrays}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+
+area[11]=23
+area[51]=UFOs
+
+echo -n "area[11] = "
+echo ${area[11]}    #  {curly brackets} needed.
+
+echo "Contents of area[51] are ${area[51]}."
+
+# Contents of uninitialized array variable print blank (null variable).
+echo -n "area[43] = "
+echo ${area[43]}
+echo "(area[43] unassigned)"
+
+#+end_src
+#+LaTex: \end{block}
+*** Arrays
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+#!/bin/bash
+# Quoting permits embedding whitespace within individual 
+#+ array elements.
+array2=( [0]="first element" [1]="second element"
+         [3]="fourth element" )
+
+echo ${array2[0]}   # first element
+echo ${array2[1]}   # second element
+echo ${array2[2]}   # Skipped in initialization, and therefore null.
+echo ${array2[3]}   # fourth element
+echo ${#array2[0]}  # 13    (length of first element)
+echo ${#array2[*]}  # 3     (number of elements in array)
+
+exit
+#+end_src
+#+LaTex: \end{block}
+** Regular expressions
+*** Regular expressions
+The main uses for Regular Expressions (REs) are text searches and
+string manipulation. An RE matches a single character or a set of
+characters.
+1. =*= matches any number of repeats, or /zero/ \pause
+2. =.= (/dot/) matches any one character, except a newline. \pause
+3. =^= beginning of line, or negates \pause
+4. =$= at the end, matches the end of line \pause
+5. =[...]= enclose a set of characteres \pause
+   + =[xyz]= matches any one (x, y or z)
+   + =[a-z0-9]= matches any single lowercase letter or any digit
+   + =[^b-d]= matches any /except/ those in the range =b= to =d=
+6. =\= scapes a special character \pause
+7. =\<...\>= mark work boundaries \pause
+8. =?= matches zero or one RE \pause
+9. =+= matches one or more RE \pause
+10. =\{\}= indicate the number of ocurrences of RE \pause
+11. =( )= enclose a group of REs \pause
+12. =|= (/or/) matches any of a set of alternate characters 
+*** Regular expressions
+#+LaTex: \begin{block}{Simple grep}
+#+begin_src sh :results output :exports both
+$ grep 'daemon' /etc/passwd
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+avahi-autoipd:x:110:119:Avahi autoip daemon,,,:/var/lib/avahi-autoipd:/bin/false
+avahi:x:111:120:Avahi mDNS daemon,,,:/var/run/avahi-daemon:/bin/false
+colord:x:113:123:colord colour management daemon,,,:/var/lib/colord:/bin/false
+pulse:x:117:124:PulseAudio daemon,,,:/var/run/pulse:/bin/false
+usbmux:x:120:46:usbmux daemon,,,:/var/lib/usbmux:/bin/false
+#+end_src
+#+LaTex: \end{block}
+
+\pause
+
+#+LaTex: \begin{block}{(caret) begin of line}
+#+begin_src sh :results output :exports both
+$ grep '^daemon' /etc/passwd
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+#+end_src
+#+LaTex: \end{block}
+*** Regular expressions
+#+LaTex: \begin{block}{\$ end of line}
+#+begin_src sh :results output :exports both
+$ grep 'bash$' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+jvlima:x:1000:1000:Joao,,,:/home/jvlima:/bin/bash
+ddomenico:x:1001:1001:,,,:/home/ddomenico:/bin/bash
+gfreytag:x:1002:1002:,,,:/home/gfreytag:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+*** Regular expressions
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+$ grep 'Daemon' /etc/passwd
+kernoops:x:116:65534:Kernel Oops Tracking Daemon,,,:/:/bin/false
+#+end_src
+#+LaTex: \end{block}
+
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+$ grep 'daemon' /etc/passwd
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+avahi:x:111:120:Avahi mDNS daemon,,,:/var/run/avahi-daemon:/bin/false
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{block}{Not case sensitive}
+#+begin_src sh :results output :exports both
+$ grep '[Dd]aemon' /etc/passwd
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+avahi:x:111:120:Avahi mDNS daemon,,,:/var/run/avahi-daemon:/bin/false
+kernoops:x:116:65534:Kernel Oops Tracking Daemon,,,:/:/bin/false
+#+end_src
+#+LaTex: \end{block}
+*** Regular expressions
+#+LaTex: \begin{block}{. (dot) one character}
+#+begin_src sh :results output :exports both
+$ grep '^.[aeiou]' /etc/passwd|head -5
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+#+end_src
+#+LaTex: \end{block}
+*** Regular expressions
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+$ grep '^...............................$' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{block}{\{\} repetition}
+#+begin_src sh :results output :exports both
+$ grep '^.\{31\}$' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{block}{One or more}
+#+begin_src sh :results output :exports both
+$ egrep '[0-9]{4,}' /etc/passwd
+sync:x:4:65534:sync:/bin:/bin/sync
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+kernoops:x:116:65534:Kernel Oops Tracking Daemon,,,:/:/bin/false
+jvlima:x:1000:1000:Joao,,,:/home/jvlima:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+*** Regular expressions
+#+LaTex: \begin{block}{.* (AND)}
+#+begin_src sh :results output :exports both
+$ egrep '^[a-z].*bash$' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+jvlima:x:1000:1000:Joao,,,:/home/jvlima:/bin/bash
+ddomenico:x:1001:1001:,,,:/home/ddomenico:/bin/bash
+gfreytag:x:1002:1002:,,,:/home/gfreytag:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{block}{OR}
+#+begin_src sh :results output :exports both
+$ egrep '^(jvlima|root):' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+jvlima:x:1000:1000:Joao,,,:/home/jvlima:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{block}{NOT}
+#+begin_src sh :results output :exports both
+$ egrep '^[^a-z]' /etc/passwd
+_apt:x:105:65534::/nonexistent:/bin/false
+#+end_src
+#+LaTex: \end{block}
+*** Regular expressions                                          :noexport:
+
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+
+#+end_src
+#+LaTex: \end{block}
+*** 
+
+* Tasks [3/3]                                                      :noexport:
+** DONE Arithmetic operations
+CLOSED: [2016-08-19 Sex 14:58]
+- =let=
+- double parentheses (=(())=)
+- does not support floating point numbers, only with =bc=.
+** DONE variables [3/3]
+CLOSED: [2016-08-20 Sáb 20:54]
+*** DONE More on variables
+CLOSED: [2016-08-19 Sex 15:18]
+1. internal variables
+2. =$RANDOM=
+*** DONE Manipulating strings
+CLOSED: [2016-08-19 Sex 15:57]
+1. string length
+3. string extraction
+4. string removal
+5. replacement
+*** DONE Paramter substitution
+CLOSED: [2016-08-20 Sáb 20:54]
+** DONE Loops [4/4]
+CLOSED: [2016-08-22 Seg 09:28]
+*** DONE for
+CLOSED: [2016-08-22 Seg 09:28]
+*** DONE while
+CLOSED: [2016-08-22 Seg 09:28]
+*** DONE until
+CLOSED: [2016-08-22 Seg 09:28]
+*** DONE Loop control
+CLOSED: [2016-08-22 Seg 09:28]
+- break
+- continue
+** 
+
+
+* Emacs setup                                                      :noexport:
+# Local Variables:
+# eval:   (setq org-latex-listings nil)
+# End:
