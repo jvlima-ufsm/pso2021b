@@ -38,6 +38,8 @@
 #+LATEX_HEADER: }
 #+end_comment
 
+#+latex_header: \logo{ \includegraphics[height=1cm,width=1cm,keepaspectratio]{logo_inf}    \includegraphics[height=1cm,width=1cm,keepaspectratio]{logo_ufsm} }
+
 #+begin_export latex
 \frame<handout:0>
 {
@@ -584,7 +586,8 @@ echo ${#array2[*]}  # 3     (number of elements in array)
 exit
 #+end_src
 #+LaTex: \end{block}
-** Regular expressions
+*** 
+** Regular expressions                                            :noexport:
 *** Regular expressions
 The main uses for Regular Expressions (REs) are text searches and
 string manipulation. An RE matches a single character or a set of
