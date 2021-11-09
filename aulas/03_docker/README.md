@@ -143,6 +143,10 @@ Em seguida podemos mapear o volume dentro do container na pasta `/dados`:
 ```
 docker run --rm -ti -v meu-volume:/dados ubuntu /bin/bash
 ```
+Ou também mapear o volume em modo somente leitura adicionando `ro`:
+```
+docker run --rm -ti -v meu-volume:/dados:ro ubuntu /bin/bash
+```
 O volume persiste mesmo com o fim do container. A remoção deve ser explícita com:
 ```
 docker volume rm meu-volume
@@ -193,6 +197,11 @@ PING alpine2 (172.18.0.3): 56 data bytes
 --- alpine2 ping statistics ---
 2 packets transmitted, 2 packets received, 0% packet loss
 round-trip min/avg/max = 0.189/0.239/0.290 ms
+```
+
+Outra forma de conexão é o modo `host` onde o container não fica isolado da rede do seu hospedeiro:
+```
+docker run -d --network host docker/getting-started
 ```
 
 ## Pacotes com APT
