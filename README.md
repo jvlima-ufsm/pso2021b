@@ -19,7 +19,7 @@ Horários: segundas e quartas, 16:30 às 18:30.
 | 5 | 2021-10-27  Qua | Introduction to Bash ([vídeo](https://youtu.be/3CL-qslLXWM), [slides](./aulas/4_introduction_to_bash.pdf)) |
 | 6 | 2021-11-03  Qua | [Prática - Ordenação em Bash](./atividades/05_pratica)  |
 | 7 | 2021-11-08  Seg | Bash Scripting ([vídeo](https://youtu.be/wSRAZ6yzzVw), [slides](./aulas/06_bash_scripting/6_bash_scripting.pdf)) |
-| 8 | 2021-11-10  Qua | Prática |
+| 8 | 2021-11-10  Qua | [Prática - Análise de rede](./atividades/07_redes) |
 | 9 | 2021-11-17  Qua | Introduction to Python |
 | 10 | 2021-11-22  Seg | Prática |
 | 11 | 2021-11-24  Qua | Python Scripting |

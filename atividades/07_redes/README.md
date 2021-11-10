@@ -2,7 +2,7 @@
 
 ## Deadline
 
-Prazo: **17/11/2021 (Qua)** pelo link do GitHub (*a definir*).
+Prazo: **19/11/2021 (Sex)** pelo link do GitHub (https://classroom.github.com/a/PxQUBx5V).
 
 Você deve escolher seu nome na lista de alunos. Em seguida, o GitHub irá criar um repositório deste trabalho em seu usuário.
 
@@ -61,8 +61,29 @@ Arquivo PCAP original: [2021-09-10-traffic-analysis-exercise.pcap](./2021-09-10-
 
 Saída em formato texto: [2021-09-10-traffic-analysis-exercise.txt](./2021-09-10-traffic-analysis-exercise.txt)
 
+
+O resultado final esperado será:
+```
+20:15:07.787295 21:31:57.075695
+3 56
+3616 10.9.10.102
+1456 23.1.237.225
+778 23.1.237.216
+680 10.9.10.9
+359 52.238.248.6
+```
+
+Uma execução de teste deve ser feita de acordo com o comando abaixo:
+```sh
+$ ./t2.sh 2021-09-10-traffic-analysis-exercise.txt
+```
+
 Fonte: https://www.malware-traffic-analysis.net/2021/09/10
 
 ## Dicas
 
 - Conte apenas os pacotes IP, descarte pacotes ARP
+- Resultados intermediários podem ser guardados em arquivos, desde que removidos ao final
+- O número no final de cada IP é a porta de conexão, que deve ser removido. Um comando para remover a porta é `sed 's/\.[0-9]\+$//g'`
+- O comando `uniq -c` elimina linhas repetidas e imprime o número de repetições encontradas. Remova o espaço na frente de cada linha com `sed 's/^[ ]\+//g'`
+- Nomeie o nome do arquivo como `t2.sh`
