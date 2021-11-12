@@ -1,0 +1,352 @@
+#+TITLE: Regular expressions
+#+SUBTITLE: Operating System Practice
+#+DATE: 2021/2
+#+AUTHOR: João Vicente Ferreira Lima
+#+EMAIL: jvlima@inf.ufsm.br
+#+OPTIONS: H:3 num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+LATEX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [xcolor=dvipsnames, 10pt, presentation,aspectratio=169]
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode 8.3.4)
+#+TAGS: noexport(n)
+#+STARTUP: beamer overview indent
+#+BEAMER_FRAME_LEVEL: 2
+#+BEAMER_THEME: Madrid
+#+BEAMER_HEADER: \institute[UFSM]{Universidade Federal de Santa Maria \\ \url{jvlima@inf.ufsm.br} \\ \url{http://www.inf.ufsm.br/~jvlima}}
+#+LATEX_HEADER: \setbeamertemplate{footline}[frame number]
+#+LATEX_HEADER: \usecolortheme[named=BrickRed]{structure}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage[american]{babel}
+#+LATEX_HEADER: \usepackage{url} \urlstyle{sf}
+#+LATEX_HEADER: \useinnertheme{circles}
+#+LATEX_HEADER: \let\alert=\structure
+#+LATEX_HEADER: \usepackage{wrapfig}
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \newcommand{\bashcmd}[1]{\textcolor{White}{\colorbox{Sepia}{\texttt{#1}}}}
+
+#+begin_comment
+#+LATEX_HEADER: \usepackage{listings}
+#+LATEX_HEADER: 
+
+#+LATEX_HEADER: \lstset{
+#+LATEX_HEADER:  language=bash,
+#+LATEX_HEADER:  aboveskip=0pt,
+#+LATEX_HEADER:  belowskip=0pt,
+#+LATEX_HEADER:  mathescape=false
+#+LATEX_HEADER: }
+#+end_comment
+
+#+latex_header: \logo{ \includegraphics[height=1cm,width=1cm,keepaspectratio]{logo_inf}    \includegraphics[height=1cm,width=1cm,keepaspectratio]{logo_ufsm} }
+
+#+begin_export latex
+\frame<handout:0>
+{
+  \frametitle{Outline}
+  \tableofcontents
+}
+
+\makeatletter
+\AtBeginSubsection[]
+{
+  \frame<handout:0>
+  {
+    \frametitle{Outline}
+    \tableofcontents[current,currentsubsection]
+  }
+}
+\makeatother
+#+end_export
+
+
+* Regular expressions
+** Regular expressions
+*** Regular expressions
+The main uses for Regular Expressions (REs) are text searches and
+string manipulation. A RE matches a single character or a set of
+characters. REs were widely used in Unix systems:
+- Text editors such =ed=
+- \bashcmd{grep} or =g/re/p=
+- Lexical analysis to create a /token/, and analyse syntax of
+  programming languages
+
+*** Regular expressions
+The main uses for Regular Expressions (REs) are text searches and
+string manipulation. An RE matches a single character or a set of
+characters.
+1. =*= matches any number of repeats, or /zero/ \pause
+2. =.= (/dot/) matches any one character, except a newline. \pause
+3. =^= beginning of line, or negates \pause
+4. =$= at the end, matches the end of line \pause
+5. =[...]= enclose a set of characteres \pause
+   + =[xyz]= matches any one (x, y or z)
+   + =[a-z0-9]= matches any single lowercase letter or any digit
+   + =[^b-d]= matches any /except/ those in the range =b= to =d=
+6. =\= scapes a special character \pause
+7. =\<...\>= mark work boundaries \pause
+8. =?= matches zero or one RE \pause
+9. =+= matches one or more RE \pause
+10. =\{\}= indicate the number of ocurrences of RE \pause
+11. =( )= enclose a group of REs \pause
+12. =|= (/or/) matches any of a set of alternate characters 
+*** Basic vs Extended Regular Expressions
+
+- The meta-characters =?, +, {, |, (, )=  lose  their special meaning
+- Instead use the backslashed versions =\?, \+, \{, \|, \(, \)=
+
+*** GREP options
+- \bashcmd{grep} - default grep
+- \bashcmd{egrep} - or \bashcmd{grep -E}, uses extended regular expressions (ERE)
+- \bashcmd{fgrep} - or \bashcmd{grep -F}, interprets patterns as fixed strings, not
+  regular expressions
+- \bashcmd{rgrep} - or \bashcmd{grep -r}, recursively reads all files
+  under each directory
+*** Regular expressions
+#+LaTex: \begin{block}{Simple grep}
+#+begin_src sh :results output :exports both
+$ grep 'daemon' /etc/passwd
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+avahi-autoipd:x:110:119:Avahi autoip daemon,,,:/var/lib/avahi-autoipd:/bin/false
+avahi:x:111:120:Avahi mDNS daemon,,,:/var/run/avahi-daemon:/bin/false
+colord:x:113:123:colord colour management daemon,,,:/var/lib/colord:/bin/false
+pulse:x:117:124:PulseAudio daemon,,,:/var/run/pulse:/bin/false
+usbmux:x:120:46:usbmux daemon,,,:/var/lib/usbmux:/bin/false
+#+end_src
+#+LaTex: \end{block}
+
+*** Regular expressions
+#+LaTex: \begin{block}{(caret) begin of line}
+#+begin_src sh :results output :exports both
+$ grep '^daemon' /etc/passwd
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+#+end_src
+#+LaTex: \end{block}
+
+#+LaTex: \begin{block}{\$ end of line}
+#+begin_src sh :results output :exports both
+$ grep 'bash$' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+jvlima:x:1000:1000:Joao,,,:/home/jvlima:/bin/bash
+ddomenico:x:1001:1001:,,,:/home/ddomenico:/bin/bash
+gfreytag:x:1002:1002:,,,:/home/gfreytag:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+*** Regular expressions
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+$ grep 'Daemon' /etc/passwd
+kernoops:x:116:65534:Kernel Oops Tracking Daemon,,,:/:/bin/false
+#+end_src
+#+LaTex: \end{block}
+
+#+LaTex: \begin{block}{Lists with []}
+#+begin_src sh :results output :exports both
+$ grep '[Dd]aemon' /etc/passwd
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+avahi:x:111:120:Avahi mDNS daemon,,,:/var/run/avahi-daemon:/bin/false
+kernoops:x:116:65534:Kernel Oops Tracking Daemon,,,:/:/bin/false
+
+grep '[aeiou]' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+.........
+#+end_src
+#+LaTex: \end{block}
+*** Regular expressions
+#+LaTex: \begin{block}{. (dot) one character}
+#+begin_src sh :results output :exports both
+$ grep '^.[aeiou]' /etc/passwd|head -5
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+#+end_src
+#+LaTex: \end{block}
+*** Regular expressions
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+$ grep '^...............................$' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{block}{\{\} repetition}
+#+begin_src sh :results output :exports both
+$ grep '^.\{31\}$' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{block}{One or more}
+#+begin_src sh :results output :exports both
+$ egrep '[0-9]{4,}' /etc/passwd
+sync:x:4:65534:sync:/bin:/bin/sync
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+kernoops:x:116:65534:Kernel Oops Tracking Daemon,,,:/:/bin/false
+jvlima:x:1000:1000:Joao,,,:/home/jvlima:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+*** Regular expressions
+#+LaTex: \begin{block}{.* (AND)}
+#+begin_src sh :results output :exports both
+$ egrep '^[a-z].*bash$' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+jvlima:x:1000:1000:Joao,,,:/home/jvlima:/bin/bash
+ddomenico:x:1001:1001:,,,:/home/ddomenico:/bin/bash
+gfreytag:x:1002:1002:,,,:/home/gfreytag:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{block}{OR}
+#+begin_src sh :results output :exports both
+$ egrep '^(jvlima|root):' /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+jvlima:x:1000:1000:Joao,,,:/home/jvlima:/bin/bash
+#+end_src
+#+LaTex: \end{block}
+\pause
+#+LaTex: \begin{block}{NOT}
+#+begin_src sh :results output :exports both
+$ egrep '^[^a-z]' /etc/passwd
+_apt:x:105:65534::/nonexistent:/bin/false
+#+end_src
+#+LaTex: \end{block}
+*** Regular expressions
+#+LaTex: \begin{block}{Backreference with () and \textbackslash~1}
+#+begin_src sh :results output :exports both
+$ egrep '([a-z])([a-z])\2\1' /etc/passwd
+_flatpak:x:117:125:Flatpak system-wide installation helper,,,:/nonexis...
+#+end_src
+#+LaTex: \end{block}
+
+#+LaTex: \begin{block}{Using Sed}
+#+begin_src sh :results output :exports both
+$ echo "James Bond" | sed -E 's/(.*) (.*)/The name is \2, \1 \2./'
+The name is Bond, James Bond.
+#+end_src
+#+LaTex: \end{block}
+
+*** Regular expressions                                          :noexport:
+
+#+LaTex: \begin{block}{}
+#+begin_src sh :results output :exports both
+
+#+end_src
+#+LaTex: \end{block}
+*** Sed
+Sed means stream editor derived from =ed= editor. It acts as a text
+editor for *stdin* data with *stdout* as target. The execution model is:
+- read input line into pattern space
+- apply commands to pattern space
+- send pattern space to stdout
+
+#+LaTex: \begin{block}{Invoking sed}
+#+begin_src sh :results output :exports both
+$ sed 'p' example.txt
+
+$ cat example.txt | sed p
+
+$ sed 'p' < example.txt
+#+end_src
+#+LaTex: \end{block}
+*** Sed
+The first command duplicates output since it prints the buffer and
+aplies the command. To supress the output we use =-n= option.
+#+LaTex: \begin{block}{Sed output}
+#+begin_src sh :results output :exports both
+$ sed 'p' example.txt
+one
+one
+two
+two
+three
+three
+
+$ sed -n 'p' example.txt
+one
+two
+three
+#+end_src
+#+LaTex: \end{block}
+*** Sed
+We can address the text lines by number or/and by pattern.
+#+LaTex: \begin{block}{Simple address}
+#+begin_src sh :results output :exports both
+$ sed '2d' example.txt
+one
+three
+
+$ sed '/three/d' example.txt
+one
+two
+#+end_src
+#+LaTex: \end{block}
+*** Sed
+We can address the text lines by number or/and by pattern.
+#+LaTex: \begin{block}{Intervals}
+#+begin_src sh :results output :exports both
+$ sed '1,2d' example.txt
+three
+
+$ sed '1,/two/d' example.txt
+three
+
+$ sed '2,$d' example.txt
+one
+
+$ sed '/^$/d' example.txt # delete empty lines
+#+end_src
+#+LaTex: \end{block}
+*** Sed
+
+#+LaTex: \begin{block}{Abort command}
+#+begin_src sh :results output :exports both
+$ sed '10q'      # at line 10, stop
+
+$ sed '/^$/q'    # stop at the first blank line
+#+end_src
+#+LaTex: \end{block}
+
+*** Sed
+#+LaTex: \begin{block}{Invert logic}
+#+begin_src sh :results output :exports both
+$ sed '1,10!d'      # do not delete lines 1 to 10
+
+$ sed -n '11,$!p'   # do not print from line 11 to the end
+#+end_src
+#+LaTex: \end{block}
+
+#+LaTex: \begin{block}{Multiple commands}
+#+begin_src sh :results output :exports both
+$ sed '5d;10d;/toto/d'  # remove lines 5, 10, and matching toto
+#+end_src
+#+LaTex: \end{block}
+
+*** Sed
+One of the most used commands is the substituition ~s///~
+
+#+LaTex: \begin{block}{Invert logic}
+#+begin_src sh :results output :exports both
+$ sed 's/toto/tata/' example.txt
+
+$ sed 's:toto:tata:' example.txt # another format
+
+$ echo "James Bond" | sed -E 's/(.*) (.*)/The name is \2, \1 \2./'
+The name is Bond, James Bond.
+
+$ sed -E '/IP/!d;s/^.*IP[ ](([0-9]{1,3}\.){3}[0-9]{1,3})\..*$/\1/'  \
+    2021-09-10-traffic-analysis-exercise.txt
+#+end_src
+#+LaTex: \end{block}
+
+*** 
+
+
+
+* Emacs setup                                                      :noexport:
+# Local Variables:
+# eval:   (setq org-latex-listings nil)
+# End:
