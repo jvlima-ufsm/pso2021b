@@ -21,7 +21,7 @@ Horários: segundas e quartas, 16:30 às 18:30.
 | 7 | 2021-11-08  Seg | Bash Scripting ([vídeo](https://youtu.be/wSRAZ6yzzVw), [slides](./aulas/06_bash_scripting/6_bash_scripting.pdf)) |
 | 8 | 2021-11-10  Qua | [Prática - Análise de rede](./atividades/07_redes) |
 | 9 | 2021-11-17  Qua | Regular Expressions ([vídeo](https://youtu.be/7ubpXR9Sqr8), [slides](./aulas/07_regex/7_regex.pdf))  |
-| 10 | 2021-11-22  Seg | Introduction to Python |
+| 10 | 2021-11-22  Seg | Introduction to Python ([vídeo](https://youtu.be/m6SRGKjEoH8), [slides](./aulas/10_python/10_introduction_to_python.pdf)) |
 | 11 | 2021-11-24  Qua | Python Scripting |
 | 12 | 2021-11-29  Seg | Prática |
 | 13 | 2021-12-01  Qua | Introdução em Redes |

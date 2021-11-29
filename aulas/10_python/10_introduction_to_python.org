@@ -1,0 +1,1045 @@
+#+TITLE: Introduction to Python
+#+SUBTITLE: Operating System Practice
+#+DATE: 2021/2
+#+AUTHOR: João Vicente Ferreira Lima
+#+EMAIL: jvlima@inf.ufsm.br
+#+OPTIONS: H:3 num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+LATEX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [xcolor=dvipsnames, 10pt, presentation,aspectratio=169]
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode 8.3.4)
+#+TAGS: noexport(n)
+#+STARTUP: beamer overview indent
+#+BEAMER_FRAME_LEVEL: 2
+#+BEAMER_THEME: Madrid
+#+BEAMER_HEADER: \institute[UFSM]{Universidade Federal de Santa Maria \\ \url{jvlima@inf.ufsm.br} \\ \url{http://www.inf.ufsm.br/~jvlima}}
+#+LATEX_HEADER: \setbeamertemplate{footline}[frame number]
+#+LATEX_HEADER: \usecolortheme[named=BrickRed]{structure}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage[american]{babel}
+#+LATEX_HEADER: \usepackage{url} \urlstyle{sf}
+#+LATEX_HEADER: \useinnertheme{circles}
+#+LATEX_HEADER: \let\alert=\structure
+#+LATEX_HEADER: \usepackage{wrapfig}
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \newcommand{\bashcmd}[1]{\textcolor{White}{\colorbox{Sepia}{\texttt{#1}}}}
+#+LATEX_HEADER: \usepackage{listings}
+#+LATEX_HEADER: 
+
+#+latex_header: \lstset{
+#+latex_header:  backgroundcolor=\color{red!10},
+#+latex_header:  showstringspaces=false,
+#+latex_header:  stringstyle=\ttfamily,
+#+latex_header:  frame=single,
+#+latex_header:  frameround=tttt,
+#+latex_header:  mathescape=false
+#+latex_header: }
+
+
+#+latex_header: \logo{ \includegraphics[height=1cm,width=1cm,keepaspectratio]{logo_inf}    \includegraphics[height=1cm,width=1cm,keepaspectratio]{logo_ufsm} }
+
+#+BEGIN_export latex
+\frame<handout:0>
+{
+  \frametitle{Outline}
+  \tableofcontents
+}
+
+\makeatletter
+\AtBeginSubsection[]
+{
+  \frame<handout:0>
+  {
+    \frametitle{Outline}
+    \tableofcontents[current,currentsubsection]
+  }
+}
+\makeatother
+#+END_export
+
+* Introduction
+** Basics
+*** Hello
+#+begin_src python 
+#!/usr/bin/env python3
+
+print('Hello world!')
+print('What is your name?')
+myName = input()
+print('What is your age?')
+myAge = input()
+print('Your age is ' + str(int(myAge)))
+#+end_src
+
+#+RESULTS:
+
+*** If/else
+#+begin_src python 
+#!/usr/bin/env python3
+
+print('Type your password:')
+word = input()
+
+if word == "hello":
+  print('Password correct!')
+else:
+  print('Wrong password!')
+#+end_src
+\pause
+#+LaTex: \begin{alertblock}{Version note}
+In Python 3.X, =raw_input= was renamed to =input=. The equivalent of
+Python 2.X =input= is =eval(input())=.
+#+LaTex: \end{alertblock}
+*** While
+#+begin_src python 
+#!/usr/bin/env python3
+
+print('Type your password:')
+word = input()
+while word != "hello":
+    print('Type your password:')
+    word = input()
+
+print('Thank you!')
+#+end_src
+*** While
+#+begin_src python 
+#!/usr/bin/env python3
+
+while True:
+    print('Type your password:')
+    word = input()
+    if word == "hello":
+        break
+
+print('Thank you!')
+#+end_src
+*** While
+#+begin_src python 
+#!/usr/bin/env python3
+
+while True:
+    print('Type your login:')
+    login = input()
+    if login != "root":
+        continue
+    print('Type your password:')
+    word = input()
+    if word == "hello":
+        break
+
+print('Thank you!')
+#+end_src
+*** For
+#+begin_src python 
+#!/usr/bin/env python3
+
+for i in range(5):
+    print(str(i)) # 0 1 2 3 4
+
+for i in range(10,15):
+    print(str(i)) # 10 11 12 13 14
+
+for i in range(0, 10, 2):
+    print(str(i)) # 0 2 4 6 8 
+
+for i in range(5, -1, -1):
+    print(str(i)) # 5 4 3 2 1 0
+#+end_src
+*** For
+#+begin_src python 
+#!/usr/bin/env python3
+import random
+
+for i in range(5):
+    print(random.randrange(1, 10)) # a <= N < b
+
+for i in range(5):
+    print(random.randint(1, 10)) # a <= N <= b
+#+end_src
+*** Exit
+#+begin_src python 
+#!/usr/bin/env python3
+import sys
+
+while True:
+    res = input('Type exit: ')
+    if res == 'exit':
+        sys.exit()
+#+end_src
+*** Functions
+#+begin_src python 
+#!/usr/bin/env python3
+import random
+def getLevel(ph):
+    if ph <= 6 and ph >= 8:
+        return 'neutral'
+    elif ph >= 8:
+        return 'acid'
+    else:
+        return 'base'
+
+    return 'invalid'
+
+ph = input("Digit the pH level: ")
+level = getLevel(ph)
+print("pH level is: " + level)
+#+end_src
+*** Print
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+print('Hello', end='')
+print('World')
+
+print('cats', 'dogs', 'mice')
+print('cats', 'dogs', 'mice', sep=',')
+#+end_src
+
+#+RESULTS:
+
+*** Exceptions
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+def spam(divider):
+    return 42/divider
+
+try:
+    print(spam(2))
+    print(spam(12))
+    print(spam(0))
+    print(spam(1))
+except ZeroDivisionError:
+    print('Error: invalid argument')
+#+end_src
+
+#+RESULTS:
+: 21
+: 3
+: Error: invalid argument
+
+** Lists
+*** Lists
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam = ['cat', 'bat', 'rat', 'elephant']
+print(spam[0])
+
+print(spam[-1])
+
+print(spam[1:3])
+
+del spam[1]
+print(spam)
+#+end_src
+
+#+RESULTS:
+: cat
+: elephant
+: ['bat', 'rat']
+: ['cat', 'rat', 'elephant']
+*** Lists
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+spam = ['cat', 'bat', 'rat', 'elephant']
+if 'cat' in spam:
+    print('There is a cat.')
+
+print(spam.index('rat'))
+
+spam.append('moose')
+spam.insert(1, 'chicken')
+
+print(spam)
+#+end_src
+
+#+RESULTS:
+: There is a cat.
+: 2
+: ['cat', 'chicken', 'bat', 'rat', 'elephant', 'moose']
+
+*** Lists
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+spam = ['cat', 'bat', 'rat', 'moose', 
+        'chicken', 'elephant']
+
+spam.sort()
+print(spam)
+
+spam.reverse()
+print(spam)
+#+end_src
+
+#+RESULTS:
+: ['bat', 'cat', 'chicken', 'elephant', 'moose', 'rat']
+: ['rat', 'moose', 'elephant', 'chicken', 'cat', 'bat']
+
+*** Lists
+#+begin_src python :results output append :exports both
+#!/usr/bin/env python3
+import random
+messages = ['It is certain',
+            'It is decidedly so',
+            'Yes definitely',
+            'Reply hazy try again',
+            'Ask again later',
+            'Concentrate and ask again',
+            'My reply is no',
+            'Outlook not so good',
+            'Very doubtful']
+
+print(random.choice(messages))
+#+end_src
+#+LaTex: \vspace{-2mm}
+#+RESULTS:
+: Concentrate and ask again
+: Concentrate and ask again
+: Yes definitely
+
+*** References
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam = 42
+cheese = spam
+spam = 100
+
+print(spam)
+print(cheese)
+#+end_src
+
+#+RESULTS:
+: 100
+: 42
+
+*** References
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam = [0, 1, 2, 3, 4]
+cheese = spam
+cheese[1] = 'Buenas'
+
+print(spam)
+print(cheese)
+#+end_src
+
+#+RESULTS:
+: [0, 'Buenas', 2, 3, 4]
+: [0, 'Buenas', 2, 3, 4]
+
+*** References
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+def eggs(something):
+    something.append('Buenas')
+
+spam = [1, 2, 3]
+eggs(spam)
+print(spam)
+#+end_src
+
+#+RESULTS:
+: [1, 2, 3, 'Buenas']
+
+*** Copy
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import copy
+
+spam = [0, 1, 2, 3, 4]
+cheese = copy.copy(spam)
+cheese[1] = 'Buenas'
+
+print(spam)
+print(cheese)
+#+end_src
+
+#+RESULTS:
+: [0, 1, 2, 3, 4]
+: [0, 'Buenas', 2, 3, 4]
+
+** Dictionaries
+*** Dictionaries
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+myCat = {'size': 'fat', 'color': 'gray', 
+         'disposition': 'loud'}
+
+print('My cat is my ' + myCat['size'])
+print('It has ' + myCat['color'] + ' fur.')
+#+end_src
+
+#+RESULTS:
+: My cat is my fat
+: It has gray fur.
+
+*** Dictionaries
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+spam = {'color': 'red', 'age': 42}
+for v in spam.values():
+    print(v)
+
+for k in spam.keys():
+    print(k)
+
+for i in spam.items():
+    print(i)
+#+end_src
+#+LaTex: \vspace{-2mm}
+#+RESULTS:
+: red
+: 42
+: color
+: age
+: ('color', 'red')
+: ('age', 42)
+
+*** Dictionaries
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam = {'color': 'red', 'age': 42}
+
+for k, v in spam.items():
+    print('Key: ' + k + ' Value: ' + str(v))
+#+end_src
+
+#+RESULTS:
+: Key: color Value: red
+: Key: age Value: 42
+
+*** Dictionaries
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam = {'name': 'Sophie', 'age': 7}
+
+print( 'name' in spam.keys()     )
+print( 'Sophie' in spam.values() )
+
+print( 'color' in spam.keys() )
+print( 'color' in spam.values() )
+#+end_src
+
+#+RESULTS:
+: True
+: True
+: False
+: False
+
+*** Dictionaries
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+hwinfo = {'disk': 3, 'mem': 10, 'cpu': 2}
+print('The PC has ' + str(hwinfo.get('disk', 0)) + 
+      ' disks.')
+
+print('The PC has ' + str(hwinfo.get('tape', 0)) + 
+      ' data tapes.')
+#+end_src
+
+#+RESULTS:
+: The PC has 3 disks.
+: The PC has 0 data tapes.
+
+** Strings
+*** Strings
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam = "Hello one"
+print(spam)
+
+spam = "Hello two\nOther line"
+print(spam)
+
+spam = r"Hello three\nAnother line"
+print(spam)
+#+end_src
+
+#+RESULTS:
+: Hello one
+: Hello two
+: Other line
+: Hello three\nAnother line
+
+*** Indexing and slicing
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam = 'Hello world!'
+
+print(spam[0])
+print(spam[-1])
+print(spam[0:5])
+#+end_src
+
+#+RESULTS:
+: H
+: !
+: Hello
+
+*** In and not int
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam= 'Hello World'
+print( 'Hello' in spam )
+print( 'HELLO' in spam )
+print( 'World' not in spam )
+#+end_src
+
+#+RESULTS:
+: True
+: False
+: False
+
+*** Upper and lower
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam= 'Hello World'
+
+print( spam.upper() )
+print( spam.lower() )
+
+#+end_src
+
+#+RESULTS:
+: HELLO WORLD
+: hello world
+
+*** isX
+- =isalpha()= only letters and not blank
+- =isalnum()= only letters and numbers and not blank
+- =isdecimal()= only numeric characters and not blank
+- =isspace()= only spaces, tabs, and newlines and not blank
+- =istitle()= only words that begin with an uppercase letter followed by
+  only lowercase letters.
+*** Star and end
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam= 'Hello World'
+print( spam.startswith('Hello') )
+print( spam.endswith('World') )
+#+end_src
+
+#+RESULTS:
+: True
+: True
+
+*** Split and join
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam = ', '.join(['cats', 'rats', 'bats'])
+print(spam)
+
+spam = ' '.join(['My', 'name', 'is', 'Earl'])
+print(spam)
+
+print( spam.split() )
+#+end_src
+
+#+RESULTS:
+: cats, rats, bats
+: My name is Earl
+: ['My', 'name', 'is', 'Earl']
+
+*** Justifying
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam = 'Hello'
+print( spam.rjust(20) )
+print( spam.ljust(20) )
+print( spam.center(20) )
+
+print( spam.center(20, '-') )
+print( spam.rjust(20, '-') )
+#+end_src
+
+#+RESULTS:
+:                Hello
+: Hello               
+:        Hello        
+: -------Hello--------
+: ---------------Hello
+
+*** Strip
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+
+spam = '     Hello world     '
+print( spam.strip() )
+print( spam.rstrip() )
+print( spam.lstrip() )
+#+end_src
+
+#+RESULTS:
+: Hello world
+:      Hello world
+: Hello world     
+
+*** Pyperclip
+The package does not come installed. To install, run:
+
+=pip3 install pyperclip=
+
+#+begin_src python :python python3 :results output replace :exports both
+#!/usr/bin/env python3
+import pyperclip
+
+pyperclip.copy('Hello world')
+spam = pyperclip.paste()
+print( spam )
+#+end_src
+
+#+RESULTS:
+: Hello world
+** Classes
+*** Classes
+#+begin_src python :python python3 :results output replace :exports both
+class Person:
+    def __init__(self, name, age, pay=0, job=None):
+        self.name = name
+        self.age = age
+        self.pay = pay
+        self.job = job
+
+    def lastName(self):
+        return self.name.split()[-1]
+
+    def giveRaise(self, percent):
+        self.pay *= (1.0 + percent)
+
+if __name__ == '__main__':
+    bob = Person('Bob Smith', 42, 30000, 'software')
+    print(bob.lastName())
+#+end_src
+
+*** Inheritance
+#+begin_src python :python python3 :results output replace :exports both
+from person import Person
+
+class Manager(Person):
+    def giveRaise(self, percent, bonus=0.1):
+        self.pay *= (1.0 + percent + bonus)
+
+if __name__ == '__main__':
+    tom = Manager(name='Tom Doe', age=50, pay=50000)
+    print(tom.lastName())
+    tom.giveRaise(.20)
+    print(tom.pay)
+#+end_src
+
+* Virtual environment
+** Introduction to virtualenv
+*** Installation
+#+LaTex: \begin{alertblock}{virtualenv}
+=virtualenv= is a tool to create isolated Python environments. You can
+install libraries locally.
+#+LaTex: \end{alertblock}
+
+Install the =virtualenv= package.
+#+begin_src sh :results output :exports both
+sudo apt install virtualenv
+#+end_src
+Alternative:
+#+begin_src sh :results output :exports both
+pip install virtualenv
+#+end_src
+*** Creating
+Creates a Python 2 environment.
+#+begin_src sh :results output :exports both
+virtualenv test
+#+end_src
+
+To use Python 3:
+#+begin_src sh :results output :exports both
+virtualenv -p python3 test
+#+end_src
+*** Usage
+Enter the envrionment:
+#+begin_src sh :results output :exports both
+cd test
+source bin/activate
+(test) $
+#+end_src
+Exit:
+#+begin_src sh :results output :exports both
+(test) $ deactivate
+#+end_src
+
+* Manipulating files
+** Directories
+*** Backslash and forward slash
+#+begin_src python :python python3 :results output replace :exports both
+#!/usr/bin/env python3
+import os
+mypath = os.path.join('usr', 'local', 'bin')
+print(mypath)
+
+myprogs = ['git', 'gcc', 'ld']
+for filename in myprogs:
+    print(os.path.join(mypath, filename))
+#+end_src
+
+#+RESULTS:
+: usr/local/bin
+: usr/local/bin/git
+: usr/local/bin/gcc
+: usr/local/bin/ld
+
+*** Directories
+#+begin_src python :python python3 :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+print( os.path.abspath('.') )
+print( os.path.isabs('.') )
+print( os.path.isabs(os.path.abspath('.')) )
+#+end_src
+
+#+RESULTS:
+: /Users/jvlima/Source/disciplinas/pso/lectures
+: False
+: True
+
+*** Directories
+#+begin_src python :python python3 :results output replace :exports both
+#!/usr/bin/env python3
+import os
+print( os.path.relpath('/usr/local', '.') )
+print( os.getcwd() )
+
+path = '/usr/local/bin/git'
+print( os.path.basename(path) )
+print( os.path.dirname(path) )
+print( path.split(os.path.sep) )
+#+end_src
+
+#+RESULTS:
+: ../../../../../../usr/local
+: /Users/jvlima/Source/disciplinas/pso/lectures
+: git
+: /usr/local/bin
+: ['', 'usr', 'local', 'bin', 'git']
+
+*** Directories
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+totalSize = 0
+for filename in os.listdir('/usr/local/bin'):
+    totalSize += os.path.getsize(
+        os.path.join('/usr/local/bin', filename))
+
+print(totalSize)
+#+end_src
+
+#+RESULTS:
+: 276636265
+
+*** Check path
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+print( os.path.exists('/usr/local') )
+print( os.path.isdir('/usr/local') )
+print( os.path.isfile('/usr/local') )
+#+end_src
+
+#+RESULTS:
+: True
+: True
+: False
+
+** Reading
+*** Reading files
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+spamfile = open('/etc/networks')
+contents = spamfile.read()
+print(contents)
+#+end_src
+
+#+RESULTS:
+: ##
+: # Networks Database
+: ##
+: loopback	127		loopback-net
+: 
+
+*** Reading files
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+spamfile = open('/etc/networks')
+line = spamfile.readline()
+while line != '':
+    print(line, end='')
+    line = spamfile.readline()
+#+end_src
+
+#+RESULTS:
+: ##
+: # Networks Database
+: ##
+: loopback	127		loopback-net
+: 
+
+*** Reading files
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+spamfile = open('/etc/networks')
+for line in spamfile:
+    print(line, end='')
+#+end_src
+
+#+RESULTS:
+: ##
+: # Networks Database
+: ##
+: loopback	127		loopback-net
+: 
+
+
+*** Reading files
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+spamfile = open('/etc/networks')
+contents = spamfile.readlines()
+print(contents)
+#+end_src
+
+#+RESULTS:
+: ['##\n', '# Networks Database\n', '##\n', 'loopback\t127\t\tloopback-net\n']
+
+** Writing
+*** Writing files
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+baconfile = open('bacon.txt', 'w')
+baconfile.write("Hello world\n")
+baconfile.write("Bacon is life\n")
+baconfile.close()
+
+baconfile = open('bacon.txt')
+content = baconfile.read()
+baconfile.close()
+print(content)
+#+end_src
+
+#+RESULTS:
+: Hello world
+: Bacon is life
+: 
+
+*** Saving variables
+The =shelf= module allows to save variables to binary shelf files.
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import shelve
+
+datafile = shelve.open('mydata')
+spam = ['cat', 'bat', 'rat', 'moose', 'chicken', 
+        'elephant']
+datafile['zoo'] = spam
+datafile.close()
+#+end_src
+
+*** Saving variables
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import shelve
+
+datafile = shelve.open('mydata')
+print( list(datafile.keys()) )
+print( list(datafile.values()) )
+datafile.close()
+#+end_src
+
+#+RESULTS:
+: ['zoo']
+: [['cat', 'bat', 'rat', 'moose', 'chicken', 'elephant']]
+
+** Organizing
+*** Copying files and folders
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import shutil
+import os
+
+os.chdir('/Users/jvlima')
+shutil.copy('a.txt', 'tmp')
+if os.path.exists('/Users/jvlima/a.txt'):
+    print('Created')
+#+end_src
+
+*** Copying files and folders
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import shutil
+import os
+
+os.chdir('/Users/jvlima')
+shutil.copytree('tmp', 'tmp2')
+if os.path.exists('/Users/jvlima/tmp2'):
+    print('Ok')
+#+end_src
+
+*** Moving and renaming
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import shutil
+
+shutil.move('/Users/jvlima/a.txt', 
+            '/Users/jvlima/tmp' )
+#+end_src
+
+*** Delete files and folders
+- =os.unlink(path)= delete the file at /path./
+- =os.rmdir(path)= delete the folder at /path/.
+- =shutil.rmtree(path)= remove the folder at /path/ and all files/folders
+  inside.
+
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+for filename in os.listdir():
+    if filename.endswith('.txt'):
+        os.unlink(filename)
+#+end_src
+
+*** Safe delete
+=pip3 install send2trash=
+
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import send2trash
+
+baconFile = open('bacon.txt', 'a')
+baconFile.write('Bacon is life')
+baconFile.close()
+
+send2trash.send2trash('bacon.txt')
+#+end_src
+
+*** Walking directories
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+for name, subfolders, filenames in os.walk('tmp'):
+    print('The current folder is ' + name)
+    for subfolder in subfolders:
+        print('SUBFOLDER OF ' + name + ': ' +
+              subfolder)
+
+    for filename in filenames:
+        print('FILE INSIDE ' + name + ': ' +
+              filename)
+    print('')
+#+end_src
+
+*** Walking directories
+
+#+RESULTS:
+: The current folder is tmp
+: SUBFOLDER OF tmp: foo
+: FILE INSIDE tmp: a.txt
+: FILE INSIDE tmp: b.txt
+: 
+: The current folder is tmp/foo
+: FILE INSIDE tmp/foo: c.txt
+: FILE INSIDE tmp/foo: d.txt
+: 
+
+*** Zip files
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import zipfile, os
+
+filezip = zipfile.ZipFile('tmp.zip')
+print( filezip.namelist() )
+
+spaminfo = filezip.getinfo('spam.txt')
+print( spaminfo.file_size )
+print( spaminfo.compress_size )
+filezip.close()
+#+end_src
+
+#+RESULTS:
+: ['b.txt', 'foo/', 'foo/c.txt', 'foo/d.txt', 'spam.txt']
+: 15
+: 15
+
+*** Extract Zip files
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import zipfile, os
+
+filezip = zipfile.ZipFile('tmp.zip')
+filezip.extractall()
+filezip.close()
+#+end_src
+
+*** Extract single Zip file
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import zipfile, os
+
+filezip = zipfile.ZipFile('tmp.zip')
+filezip.extract('spam.txt', 'tmp1')
+filezip.close()
+#+end_src
+
+*** 
+
+* Tasks [6/9]                                                      :noexport:
+** DONE strings
+CLOSED: [2016-09-13 Ter 22:50]
+** DONE lists
+CLOSED: [2016-09-13 Ter 22:50]
+** DONE dictionaries
+CLOSED: [2016-09-13 Ter 22:50]
+** TODO files
+** DONE if/else
+CLOSED: [2016-09-13 Ter 22:51]
+** DONE while/for
+CLOSED: [2016-09-13 Ter 22:51]
+** DONE functions
+CLOSED: [2016-09-13 Ter 22:51]
+** TODO modules
+** TODO classes
+
+
+
+* Emacs setup                                                      :noexport:
+# Local Variables:
+# eval:   (setq org-latex-listings t)
+# End:
