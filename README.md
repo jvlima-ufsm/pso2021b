@@ -22,8 +22,8 @@ Horários: segundas e quartas, 16:30 às 18:30.
 | 8 | 2021-11-10  Qua | [Prática - Análise de rede](./atividades/07_redes) |
 | 9 | 2021-11-17  Qua | Regular Expressions ([vídeo](https://youtu.be/7ubpXR9Sqr8), [slides](./aulas/07_regex/7_regex.pdf))  |
 | 10 | 2021-11-22  Seg | Introduction to Python ([vídeo](https://youtu.be/m6SRGKjEoH8), [slides](./aulas/10_python/10_introduction_to_python.pdf)) |
-| 11 | 2021-11-24  Qua | Python Scripting |
-| 12 | 2021-11-29  Seg | Prática |
+| 11 | 2021-11-24  Qua | [Prática - XKCD](./atividades/11_xkcd) |
+| 12 | 2021-11-29  Seg | Python Scripting |
 | 13 | 2021-12-01  Qua | Introdução em Redes |
 | 14 | 2021-12-06  Seg | Prática |
 | 15 | 2021-12-13  Seg | System Programming |
