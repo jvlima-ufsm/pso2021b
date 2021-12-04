@@ -21,15 +21,27 @@ Horários: segundas e quartas, 16:30 às 18:30.
 | 7 | 2021-11-08  Seg | Bash Scripting ([vídeo](https://youtu.be/wSRAZ6yzzVw), [slides](./aulas/06_bash_scripting/6_bash_scripting.pdf)) |
 | 8 | 2021-11-10  Qua | [Prática - Análise de rede](./atividades/07_redes) |
 | 9 | 2021-11-17  Qua | Regular Expressions ([vídeo](https://youtu.be/7ubpXR9Sqr8), [slides](./aulas/07_regex/7_regex.pdf))  |
-| 10 | 2021-11-22  Seg | Introduction to Python ([vídeo](https://youtu.be/m6SRGKjEoH8), [slides](./aulas/10_python/10_introduction_to_python.pdf)) |
-| 11 | 2021-11-24  Qua | [Prática - XKCD](./atividades/11_xkcd) |
-| 12 | 2021-11-29  Seg | Python Scripting (vídeo, [slides](./aulas/12_python_scripting/12_python_scripting.pdf) |
-| 13 | 2021-12-01  Qua | Introdução em Redes |
-| 14 | 2021-12-06  Seg | Prática |
-| 15 | 2021-12-13  Seg | System Programming |
-| 16 | 2021-12-15  Qua | Introdução a testes e TDD |
-| 17 | 2021-12-20  Seg | Prática |
-| 18 | 2021-12-22  Qua | Prática |
+| - | 2021-11-22  Seg | **JAI** |
+| - | 2021-11-24  Qua | **JAI** |
+| 10 | 2021-11-29  Seg | Introduction to Python ([vídeo](https://youtu.be/m6SRGKjEoH8), [slides](./aulas/10_python/10_introduction_to_python.pdf)) |
+| 11 | 2021-12-01  Qua | [Prática - XKCD](./atividades/11_xkcd) |
+| 12 | 2021-12-06  Seg | Python Scripting ([vídeo](https://youtu.be/afhYrwvBFt0), [slides](./aulas/12_python_scripting/12_python_scripting.pdf) |
+| 13 | 2021-12-13  Seg | Python System Programming |
+| 14 | 2021-12-15  Qua | Prática |
+| 15 | 2021-12-20  Seg | Introdução a testes e TDD  |
+| 16 | 2021-12-22  Qua | Prática |
+| 17 | 2022-01-10  Seg | Introdução em Redes  |
+| 18 | 2022-01-12  Qua | Prática  |
+| 19 | 2022-01-17 Seg | Serviços Docker |
+| 20 | 2022-01-19 Qua | Prática |
+| 21 | 2022-01-24 Seg | Sistemas de Arquivos e Backup |
+| 22 | 2022-01-26 Qua | Prática |
+| 23 | 2022-01-31 Seg | Prática  |
+| 24 | 2022-02-02 Qua | Prática |
+| 25 | 2022-02-07 Seg | Build and Debug Programs |
+| 26 | 2022-02-09 Qua | Prática |
+| 27 | 2022-02-14 Seg | Projeto Final |
+| 28 | 2022-02-16 Qua | Projeto Final |
 
 ## Material de apoio
 
