@@ -1,0 +1,1166 @@
+#+TITLE: System Programming
+#+SUBTITLE: Operating System Practice
+#+DATE: 2019/1
+#+AUTHOR: João Vicente Ferreira Lima
+#+EMAIL: jvlima@inf.ufsm.br
+#+OPTIONS: H:3 num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
+#+LATEX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [xcolor=dvipsnames, 11pt, presentation]
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+#+EXCLUDE_TAGS: noexport
+#+CREATOR: Emacs 24.5.1 (Org mode 8.3.4)
+#+TAGS: noexport(n)
+#+STARTUP: beamer overview indent
+#+BEAMER_FRAME_LEVEL: 2
+#+BEAMER_THEME: Madrid
+#+BEAMER_HEADER: \institute[UFSM]{Universidade Federal de Santa Maria \\ \url{jvlima@inf.ufsm.br} \\ \url{http://www.inf.ufsm.br/~jvlima}}
+#+LATEX_HEADER: \setbeamertemplate{footline}[frame number]
+#+LATEX_HEADER: \usecolortheme[named=BrickRed]{structure}
+#+LATEX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+LATEX_HEADER: \usepackage[american]{babel}
+#+LATEX_HEADER: \usepackage{url} \urlstyle{sf}
+#+LATEX_HEADER: \useinnertheme{circles}
+#+LATEX_HEADER: \let\alert=\structure
+#+LATEX_HEADER: \usepackage{wrapfig}
+#+LATEX_HEADER: \usepackage{fancyvrb}
+#+LATEX_HEADER: \newcommand{\bashcmd}[1]{\textcolor{White}{\colorbox{Sepia}{\texttt{#1}}}}
+#+LATEX_HEADER: \usepackage{listings}
+#+LATEX_HEADER: 
+
+#+LATEX_HEADER: \lstset{
+#+LATEX_HEADER:  backgroundcolor=\color{red!10},
+#+LATEX_HEADER:  showstringspaces=false,
+#+LATEX_HEADER:  stringstyle=\ttfamily,
+#+LATEX_HEADER:  frame=single,
+#+LATEX_HEADER:  frameround=tttt,
+#+LATEX_HEADER:  mathescape=false
+#+LATEX_HEADER: }
+
+#+BEGIN_export latex
+\frame<handout:0>
+{
+  \frametitle{Outline}
+  \tableofcontents
+}
+
+\makeatletter
+\AtBeginSubsection[]
+{
+  \frame<handout:0>
+  {
+    \frametitle{Outline}
+    \tableofcontents[current,currentsubsection]
+  }
+}
+\makeatother
+#+END_export
+
+* Fundamental concepts
+** System calls
+*** System calls
+- A system call changes the processor state from user mode to kernel mode.
+- The number of system calls is fixed, and each system call has an
+  unique number.
+- Each system call may have a set of arguments that has information to
+  transfer to be transfered from user space to kernel space.
+
+The system call steps are:
+1. Calls a wrapper function in the C library.
+2. The wrapper function copies the arguments to these registers.
+3. The wrapper function copies the system call number into a specific
+   CPU register (=%eax=).
+4. The wrapper function executes a /trap/ instruction (=int 0x80=).
+5. The kernel invokes its /system_call()/.
+6. If the return value indicates an error, the wrapper function sets
+   the global variable /errno/.
+
+*** System calls
+The Figure below illustrates the above steps for the /execve()/ system call.
+#+BEGIN_export latex
+\begin{center}
+  \includegraphics[scale=0.6]{figures/systemCall.png}
+\end{center}
+#+END_export
+
+** Python system modules
+*** Python system modules
+Most system-level calls are shipped in just two modules: =sys= and
+=os=. =sys= exports components related to the Python /interpreter/ and =os=
+contains variables and functions that map to the operating system.
+
+Other related modules are:
+- glob :: filename expansion.
+- socket :: network connections and IPC.
+- threading, queue :: running and synchronizing concurrent threads.
+- time, timeit :: system time details.
+- subprocess, multiprocessing :: launching and controlling parallel processes.
+- signal, select, shutil, tempfile, /etc/ :: system-related tasks
+** Time 
+*** Time
+ #+begin_src python :python python3 :results output replace :exports both
+import time
+from datetime import date
+
+today = date.today()
+print( "Today is: ", today)
+
+timestamp = time.time()
+print( "Timestamp now: ", timestamp )
+
+time_today = date.fromtimestamp(timestamp)
+print( "From timestamp:", time_today )
+#+end_src
+
+ #+RESULTS:
+ : Today is:  2019-05-13
+ : Timestamp now:  1557773061.429696
+ : From timestamp: 2019-05-13
+*** Time
+ #+begin_src python :python python3 :results output replace :exports both
+import time
+from datetime import date, datetime
+
+t1 = time.time()
+print("Sleeping 2 seconds...")
+time.sleep(2)
+t2 = time.time()
+
+delta = datetime.fromtimestamp(t2-t1)
+print("Seconds:", delta.second,
+    "Microseconds:", delta.microsecond)
+#+end_src
+
+ #+RESULTS:
+ : Sleeping 2 seconds...
+ : Seconds: 2 Microseconds: 7270
+
+* File I/O                                                         :noexport:
+** File information
+*** Time
+ #+begin_src python :python python3 :results output replace :exports both
+import os
+import time
+from datetime import date, datetime
+
+statinfo = os.stat("/etc/hosts")
+print("File size is", statinfo.st_size)
+datetime_modified  = datetime.fromtimestamp(
+    statinfo.st_mtime)
+print( "Modified at", datetime_modified )
+current = datetime.now()
+age = current - datetime_modified 
+print("File age:", age)
+#+end_src
+
+ #+RESULTS:
+ : File size is 236
+ : Modified at 2012-02-21 22:57:33
+ : File age: 2058 days, 16:50:37.004494
+
+** Directories
+*** Backslash and forward slash
+#+begin_src python :python python3 :results output replace :exports both
+#!/usr/bin/env python3
+import os
+mypath = os.path.join('usr', 'local', 'bin')
+print(mypath)
+
+myprogs = ['git', 'gcc', 'ld']
+for filename in myprogs:
+    print(os.path.join(mypath, filename))
+#+end_src
+
+#+RESULTS:
+: usr/local/bin
+: usr/local/bin/git
+: usr/local/bin/gcc
+: usr/local/bin/ld
+
+*** Directories
+Basic directory functions can be found on the =os.path= tools.
+
+The absolute path can be retrived (=os.path.abspath=) or tested
+(=os.path.isabs=).
+#+begin_src python :python python3 :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+print( os.path.abspath('.') )
+print( os.path.isabs('.') )
+print( os.path.isabs(os.path.abspath('.')) )
+#+end_src
+
+#+RESULTS:
+: /Users/jvlima/Source/disciplinas/pso/lectures
+: False
+: True
+*** Directories
+The relative path can be obtained using the =realpath()= call. For
+programs, we can get the base name (=basename()=) or the directory name
+(=dirname()=).
+#+begin_src python :python python3 :results output replace :exports both
+#!/usr/bin/env python3
+import os
+print( os.path.relpath('/usr/local', '.') )
+print( os.getcwd() )
+
+path = '/usr/local/bin/git'
+print( os.path.basename(path) )
+print( os.path.dirname(path) )
+print( path.split(os.path.sep) )
+#+end_src
+
+#+RESULTS:
+: ../../../../../../usr/local
+: /Users/jvlima/Source/disciplinas/pso/lectures
+: git
+: /usr/local/bin
+: ['', 'usr', 'local', 'bin', 'git']
+
+*** Directories
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+totalSize = 0
+for filename in os.listdir('/usr/local/bin'):
+    totalSize += os.path.getsize(
+        os.path.join('/usr/local/bin', filename))
+
+print(totalSize)
+#+end_src
+
+#+RESULTS:
+: 276636265
+
+*** Check path
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+print( os.path.exists('/usr/local') )
+print( os.path.isdir('/usr/local') )
+print( os.path.isfile('/usr/local') )
+#+end_src
+
+#+RESULTS:
+: True
+: True
+: False
+
+** Reading
+*** Basic reading
+=read()= function can read all contents.
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+spamfile = open('/etc/networks')
+contents = spamfile.read()
+print(contents)
+#+end_src
+
+#+RESULTS:
+: ##
+: # Networks Database
+: ##
+: loopback	127		loopback-net
+: 
+
+*** Read line
+You can also read each line using =readline()=.
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+spamfile = open('/etc/networks')
+line = spamfile.readline()
+while line != '':
+    print(line, end='')
+    line = spamfile.readline()
+#+end_src
+
+#+RESULTS:
+: ##
+: # Networks Database
+: ##
+: loopback	127		loopback-net
+: 
+
+*** Read iterator
+A =for= loop can also read file lines using a file object.
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+spamfile = open('/etc/networks')
+for line in spamfile:
+    print(line, end='')
+#+end_src
+
+#+RESULTS:
+: ##
+: # Networks Database
+: ##
+: loopback	127		loopback-net
+: 
+
+*** Read all contents
+Readling all contents using =readlines()= return a list, each list
+element is a text line.
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+spamfile = open('/etc/networks')
+contents = spamfile.readlines()
+print(contents)
+#+end_src
+
+#+RESULTS:
+: ['##\n', '# Networks Database\n', '##\n', 'loopback\t127\t\tloopback-net\n']
+
+** Writing files
+*** Writing files
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+baconfile = open('bacon.txt', 'w')
+baconfile.write("Hello world\n")
+baconfile.write("Bacon is life\n")
+baconfile.close()
+
+baconfile = open('bacon.txt')
+content = baconfile.read()
+baconfile.close()
+print(content)
+#+end_src
+
+#+RESULTS:
+: Hello world
+: Bacon is life
+: 
+
+*** Saving variables
+The =shelf= module allows to save variables to binary shelf files.
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import shelve
+
+datafile = shelve.open('mydata')
+spam = ['cat', 'bat', 'rat', 'moose', 'chicken', 
+        'elephant']
+datafile['zoo'] = spam
+datafile.close()
+#+end_src
+
+*** Saving variables
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import shelve
+
+datafile = shelve.open('mydata')
+print( list(datafile.keys()) )
+print( list(datafile.values()) )
+datafile.close()
+#+end_src
+
+#+RESULTS:
+: ['zoo']
+: [['cat', 'bat', 'rat', 'moose', 'chicken', 'elephant']]
+
+** Organizing
+*** Copying files and folders
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import shutil
+import os
+
+os.chdir('/Users/jvlima')
+shutil.copy('a.txt', 'tmp')
+if os.path.exists('/Users/jvlima/a.txt'):
+    print('Created')
+#+end_src
+
+*** Copying files and folders
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import shutil
+import os
+
+os.chdir('/Users/jvlima')
+shutil.copytree('tmp', 'tmp2')
+if os.path.exists('/Users/jvlima/tmp2'):
+    print('Ok')
+#+end_src
+
+*** Moving and renaming
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import shutil
+
+shutil.move('/Users/jvlima/a.txt', 
+            '/Users/jvlima/tmp' )
+#+end_src
+
+*** Delete files and folders
+- =os.unlink(path)= delete the file at /path./
+- =os.rmdir(path)= delete the folder at /path/.
+- =shutil.rmtree(path)= remove the folder at /path/ and all files/folders
+  inside.
+
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+for filename in os.listdir():
+    if filename.endswith('.txt'):
+        os.unlink(filename)
+#+end_src
+
+*** Safe delete
+=pip3 install send2trash=
+
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import send2trash
+
+baconFile = open('bacon.txt', 'a')
+baconFile.write('Bacon is life')
+baconFile.close()
+
+send2trash.send2trash('bacon.txt')
+#+end_src
+
+*** Walking directories
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import os
+
+for name, subfolders, filenames in os.walk('tmp'):
+    print('The current folder is ' + name)
+    for subfolder in subfolders:
+        print('SUBFOLDER OF ' + name + ': ' +
+              subfolder)
+
+    for filename in filenames:
+        print('FILE INSIDE ' + name + ': ' +
+              filename)
+    print('')
+#+end_src
+*** Walking directories
+#+RESULTS:
+: The current folder is tmp
+: SUBFOLDER OF tmp: foo
+: FILE INSIDE tmp: a.txt
+: FILE INSIDE tmp: b.txt
+: 
+: The current folder is tmp/foo
+: FILE INSIDE tmp/foo: c.txt
+: FILE INSIDE tmp/foo: d.txt
+: 
+
+*** Zip files
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import zipfile, os
+
+filezip = zipfile.ZipFile('tmp.zip')
+print( filezip.namelist() )
+
+spaminfo = filezip.getinfo('spam.txt')
+print( spaminfo.file_size )
+print( spaminfo.compress_size )
+filezip.close()
+#+end_src
+
+#+RESULTS:
+: ['b.txt', 'foo/', 'foo/c.txt', 'foo/d.txt', 'spam.txt']
+: 15
+: 15
+
+*** Extract Zip files
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import zipfile, os
+
+filezip = zipfile.ZipFile('tmp.zip')
+filezip.extractall()
+filezip.close()
+#+end_src
+
+*** Extract single Zip file
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3
+import zipfile, os
+
+filezip = zipfile.ZipFile('tmp.zip')
+filezip.extract('spam.txt', 'tmp1')
+filezip.close()
+#+end_src
+
+* Processes
+** Processes
+*** Introduction
+The =os= module contains basic functions to run shell commands from
+within Python scripts.  Two =os= functions allow scripts to run any
+command line:
+- =os.system= :: runs shell command
+- =os.popen= :: runs a shell command and connects to its input or
+              output.
+- =subprocess= :: intends to replace =os.system= and =os.spawn*=.
+
+*** Current Working Directory
+The CWD is the directory you where in when you typed this command, not
+where the script resides.
+On the other hand, Python automatically adds the identity of the
+script's home directory to the front of the module search path in
+order to import any other files.
+#+begin_src python :results output replace :exports both
+import os
+import sys
+
+print('My os.getcwd: ' + os.getcwd())
+print('My sys.path : ' + str(sys.path))
+#+end_src
+
+#+RESULTS:
+: My os.getcwd: /Users/jvlima/pso/lectures
+: My sys.path : ['', '/usr/local/Cellar/python3/3.5.2_3/Frameworks/Python.framework/Versions/3.5/lib/python35.zip', '/usr/local/Cellar/python3/3.5.2_3/Frameworks/Python.framework/Versions/3.5/lib/python3.5', '/usr/local/Cellar/python3/3.5.2_3/Frameworks/Python.framework/Versions/3.5/lib/python3.5/plat-darwin', '/usr/local/Cellar/python3/3.5.2_3/Frameworks/Python.framework/Versions/3.5/lib/python3.5/lib-dynload', '/usr/local/lib/python3.5/site-packages']
+
+*** Shell environment variables
+Shell variables are available as =os.environ=, a Python dictionary-like
+object with one entry per variable in the shell.
+#+begin_src python :results output replace :exports both
+import os
+
+print(os.environ.keys())
+print(list(os.environ.keys()))
+print('Variable TMPDIR is: ' + os.environ['TMPDIR'])
+#+end_src
+
+#+RESULTS:
+: KeysView(environ({'XPC_FLAGS': '0x0', 'PWD': '/Users/jvlima/pso/lectures', 'SCRATCH': '/Users/jvlima', 'TERM': 'dumb', 'TERM_SESSION_ID': '3ECE587D-354D-4C48-BDCB-F7CE89511DB5', '_': '/usr/local/bin/python3', 'SECURITYSESSIONID': '186a8', 'DISPLAY': 'jvlima-imac.inf.ufsm.br', 'TERM_PROGRAM_VERSION': '387', 'LOGNAME': 'jvlima', 'TERM_PROGRAM': 'Apple_Terminal', '__CF_USER_TEXT_ENCODING': '0x1F5:0x0:0x0', 'PERL_MB_OPT': '--install_base "/Users/jvlima/perl5"', '__PYVENV_LAUNCHER__': '/usr/local/bin/python3', 'LC_CTYPE': 'UTF-8', 'SHELL': '/bin/bash', 'LANG': 'en_BR.UTF-8', 'SHLVL': '2', 'HOME': '/Users/jvlima', 'TMPDIR': '/var/folders/m6/d0jhl9fs19j82w4fck9qxs7m0000gn/T/', 'SSH_AUTH_SOCK': '/private/tmp/com.apple.launchd.f9J5Jk4Lgj/Listeners', 'XPC_SERVICE_NAME': '0', 'PATH': '/Users/jvlima/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Library/TeX/texbin', 'PERL_MM_OPT': 'INSTALL_BASE=/Users/jvlima/perl5', 'Apple_PubSub_Socket_Render': '/private/tmp/com.apple.launchd.ZWqR5XU2KQ/Render', 'USER': 'jvlima'}))
+: ['XPC_FLAGS', 'PWD', 'SCRATCH', 'TERM', 'TERM_SESSION_ID', '_', 'SECURITYSESSIONID', 'DISPLAY', 'TERM_PROGRAM_VERSION', 'LOGNAME', 'TERM_PROGRAM', '__CF_USER_TEXT_ENCODING', 'PERL_MB_OPT', '__PYVENV_LAUNCHER__', 'LC_CTYPE', 'SHELL', 'LANG', 'SHLVL', 'HOME', 'TMPDIR', 'SSH_AUTH_SOCK', 'XPC_SERVICE_NAME', 'PATH', 'PERL_MM_OPT', 'Apple_PubSub_Socket_Render', 'USER']
+: Variable TMPDIR is: /var/folders/m6/d0jhl9fs19j82w4fck9qxs7m0000gn/T/
+
+*** Shell environment variables
+To change or create variables, we can just assign a value like normal
+dictionaries.
+However, this new value is only visible to the enclosing shell
+environment.
+#+begin_src python :results output replace :exports both
+#!/usr/bin/env python3 
+import os
+
+print('Old value: ' + os.environ['USER'])
+os.environ['USER'] = 'thing'
+print('New value: ' + os.environ['USER'])
+#+end_src
+
+#+RESULTS:
+: Old value: jvlima
+: New value: thing
+
+** Running a shell command
+*** Running a shell command
+The =os.system= call lets Python scripts run any sort of command line
+program. 
+#+begin_src python :results output replace :exports both
+import os
+
+ret = os.system('ls ..')
+print('Return value: ' + str(ret))
+#+end_src
+
+#+RESULTS:
+: LICENSE
+: README.org
+: assignments
+: lectures
+: scripts
+: Return value: 0
+
+The =os.system= returns the exit status, and redirects the command's
+output in the session or standard output.
+*** Communicating with shell commands
+=os.popen= connects to the standard output or input of the command. If
+we pass a =w= mode flag to =popen=, we connect to the command's input
+stream.
+#+begin_src python :results output replace :exports both
+import os
+
+text = os.popen('ls ..').read()
+print(text)
+
+lines = os.popen('ls ..').readlines()
+print(lines)
+#+end_src
+
+#+RESULTS:
+: LICENSE
+: README.org
+: assignments
+: lectures
+: scripts
+: 
+: ['LICENSE\n', 'README.org\n', 'assignments\n', 'lectures\n', 'scripts\n']
+
+** =subprocess= module
+*** =subprocess= module
+As we mentioned before, the =subprocess= module intends to replate
+several older modules and functions such as =os.system= and =os.spawn*=.
+
+Running a shell command can be done using =run()= (recommended) or =call()=.
+#+begin_src python :results output replace :exports both
+import subprocess
+
+subprocess.run('date')
+subprocess.run(['ls', '..'])
+subprocess.run('hello.py', shell=True)
+#+end_src
+
+#+RESULTS:
+: Wed Nov 16 14:39:46 BRST 2016
+: LICENSE
+: README.org
+: assignments
+: lectures
+: scripts
+
+*** =subprocess= module
+Two things must be noted here:
+1. The second command received a list in which the first element is
+   the command and the second its arguments.
+2. The =shell=True= argument. On Unix-like platforms, when =shell= is
+=False=, the program command line is run directly by =os.execvp=. If this
+argument is =True=, the command is run through a shell instead.
+
+** Forking processes
+*** Forking processes
+#+begin_src python :results output replace :exports both
+import os
+
+def child():
+  print('Hello from child', os.getpid())
+  os._exit(0)
+
+def parent():
+  while True:
+    newpid = os.fork()
+    if newpid == 0:
+      child()
+    else:
+      print('Hello from parent', os.getpid(), newpid)
+    if input() == 'q':
+      break
+parent()
+#+end_src
+*** Forking processes
+#+begin_src python :results output replace :exports both
+import os, time
+
+def counter(count):
+  for i in range(count):
+    time.sleep(1)
+    print('[%s] => %s' % (os.getpid(), i))
+
+for i in range(5):
+  pid = os.fork()
+  if pid != 0:
+    print('Process %s spawned' % pid)
+  else:
+    counter(5)
+    os._exit(0)
+
+print('Main process exiting.')
+#+end_src
+*** Fork
+#+begin_src python :results output replace :exports both
+import os
+
+parm = 0
+while True:
+  parm += 1
+  pid = os.fork()
+  if pid == 0:
+    os.execlp('python', 'python', 'child.py', 
+              str(parm))
+    assert False, 'error starting program'
+  else:
+    print('Child is', pid)
+    if input() == 'q':
+      break
+#+end_src
+*** Exec
+#+begin_src python :results output replace :exports both
+import os
+import sys
+
+print('Hello from child', os.getpid(), sys.argv[1])
+#+end_src
+
+A list of =os.exec= variants are:
+#+BEGIN_EXAMPLE
+os.execv(program, commandlinesequence)
+os.execl(program, cmdarg1, cmdarg2, ... cmdargN)
+os.execlp
+os.execvp
+os.execvpe
+os.execlpe
+#+END_EXAMPLE
+
+** Threads
+*** Threading
+The =threading= module uses the =_thread= module (lower-level interface)
+to implement a higher-level interface based on objects and classes.
+
+#+begin_src python :results output replace :exports both
+import threading
+#+end_src
+*** Threading
+This example demostrates a threading class (=MyThead=):
+#+begin_src python :results output replace :exports both
+import threading
+
+class MyThread(threading.Thread):
+  def __init__(self, myId, count, mutex):
+    self.myId = myId
+    self.count = count
+    self.mutex = mutex
+    threading.Thread.__init__(self)
+
+  def run(self):
+    for i in range(self.count):
+      with self.mutex:
+        print('[%s] => %s' % (self.myId, i))
+#+end_src
+*** Threading
+#+begin_src python :results output replace :exports both
+stdoutmutex = threading.Lock()
+threads = []
+
+for i in range(10):
+  thread = MyThread(i, 10, stdoutmutex)
+  thread.start()
+  threads.append(thread)
+
+for thread in threads:
+  thread.join()
+
+print('Main thread exiting.')
+#+end_src
+*** Threading
+#+RESULTS:
+#+begin_example
+[0] => 0
+[0] => 1
+[0] => 2
+[0] => 3
+[0] => 4
+[0] => 5
+[0] => 6
+[0] => 7
+[0] => 8
+[0] => 9
+[1] => 0
+[1] => 1
+[1] => 2
+[1] => 3
+[1] => 4
+[1] => 5
+[1] => 6
+[1] => 7
+[1] => 8
+[1] => 9
+[2] => 0
+[2] => 1
+[2] => 2
+[2] => 3
+[2] => 4
+[2] => 5
+[2] => 6
+[2] => 7
+[2] => 8
+[2] => 9
+[3] => 0
+[3] => 1
+[3] => 2
+[3] => 3
+[3] => 4
+[3] => 5
+[3] => 6
+[3] => 7
+[3] => 8
+[3] => 9
+[4] => 0
+[4] => 1
+[4] => 2
+[4] => 3
+[4] => 4
+[4] => 5
+[4] => 6
+[4] => 7
+[4] => 8
+[4] => 9
+[5] => 0
+[5] => 1
+[5] => 2
+[5] => 3
+[5] => 4
+[5] => 5
+[5] => 6
+[5] => 7
+[5] => 8
+[5] => 9
+[6] => 0
+[6] => 1
+[6] => 2
+[6] => 3
+[6] => 4
+[6] => 5
+[6] => 6
+[6] => 7
+[6] => 8
+[6] => 9
+[7] => 0
+[7] => 1
+[7] => 2
+[7] => 3
+[7] => 4
+[7] => 5
+[7] => 6
+[7] => 7
+[7] => 8
+[7] => 9
+[8] => 0
+[8] => 1
+[8] => 2
+[8] => 3
+[8] => 4
+[8] => 5
+[8] => 6
+[8] => 7
+[8] => 8
+[8] => 9
+[9] => 0
+[9] => 1
+[9] => 2
+[9] => 3
+[9] => 4
+[9] => 5
+[9] => 6
+[9] => 7
+[9] => 8
+[9] => 9
+Main thread exiting.
+#+end_example
+*** Threading
+Your thread class do not necessarily have to subclass =Thread=. The
+thread's target in =threading= may be any type of /callable object/.
+#+begin_src python :results output replace :exports both
+import threading
+
+class Power:
+    def __init__(self, i):
+        self.i = i
+    def action(self):
+        print(self.i ** 32)
+
+obj = Power(2)
+threading.Thread(target=obj.action).start()
+#+end_src
+
+#+RESULTS:
+: 4294967296
+*** Threading
+Global variables can require coordination if concurrent updates are
+possible, such as:
+#+begin_src python :results output replace :exports both
+import threading
+import time
+
+count = 0
+
+def adder():
+    global count
+    count = count + 1
+    time.sleep(0.5)
+    count = count + 1
+#+end_src
+*** Threading
+#+begin_src python :results output replace :exports both
+threads = []
+for i in range(100):
+    thread = threading.Thread(target=adder, args=())
+    thread.start()
+    threads.append(thread)
+
+for thread in threads:
+    thread.join()
+print(count)
+#+end_src
+
+#+RESULTS:
+: 200
+*** Threading
+This code clearly has a race condition on the update of =count= global
+variable. To avoid this race, we need to add a lock to synchronize the
+updates:
+#+begin_src python :results output replace :exports both
+import threading
+import time
+
+count = 0
+
+def adder(addlock):
+    global count
+    with addlock:
+        count = count + 1
+    time.sleep(0.5)
+    with addlock:
+        count = count + 1
+#+end_src
+*** Threading
+#+begin_src python :results output replace :exports both
+addlock = threading.Lock()
+threads = []
+for i in range(100):
+    thread = threading.Thread(target=adder, args=(addlock,))
+    thread.start()
+    threads.append(thread)
+
+for thread in threads:
+    thread.join()
+print(count)
+#+end_src
+
+#+RESULTS:
+: 200
+
+*** Queue
+The =queue= module provides a standard queue data structure (FIFO),
+in which items are added on one end and removed from the other.
+The queue object is automatically controlled with thread lock acquire
+and release operations.
+
+In this example, the program runs two producers and two consumers
+(five threads including the main one). Note that consumers threads are
+set to be /daemon/ threads. The entire program exits when only deamon
+threads are left. Producer threads end with a /join/ at the end.
+*** Queue
+#+begin_src python :results output replace :exports both
+import threading
+import queue
+import time
+
+nconsumers = 2
+nproducers = 2
+nmessages = 4
+
+safeprint = threading.Lock()
+dataQueue = queue.Queue()
+#+end_src
+*** Producer/consumer
+#+begin_src python :results output replace :exports both
+def producer(idnum):
+    for msg in range(nmessages):
+        time.sleep(idnum)
+        dataQueue.put('[producer id=%d, count=%d]' % 
+                      (idnum, msg))
+
+def consumer(idnum):
+    while True:
+        time.sleep(0.1)
+        try:
+            data = dataQueue.get(block=False)
+        except queue.Empty:
+            pass
+        else:
+            with safeprint:
+                print('consumer', idnum,
+                      'got =>', data)
+#+end_src
+*** Producer/consumer
+#+begin_src python :results output replace :exports both
+if __name__ == '__main__':
+    for i in range(nconsumers):
+        thread = threading.Thread(target=consumer,
+                                  args=(i,))
+        thread.daemon = True # else cannot exit
+        thread.start()
+
+    threads = []        
+    for i in range(nproducers):
+        thread = threading.Thread(target=producer,
+                                  args=(i,))
+        thread.start()
+        threads.append(thread)
+
+    for thread in threads:
+        thread.join()
+#+end_src
+*** Producer/consumer
+#+RESULTS:
+: consumer 0 got => [producer id=0, count=0]
+: consumer 1 got => [producer id=0, count=1]
+: consumer 0 got => [producer id=0, count=2]
+: consumer 1 got => [producer id=0, count=3]
+: consumer 0 got => [producer id=1, count=0]
+: consumer 0 got => [producer id=1, count=1]
+: consumer 0 got => [producer id=1, count=2]
+
+*** Other synchronization objects
+- =threading.RLock= :: reentrant lock.
+- =threading.Condition(lock=None)= :: condition variable.
+- =threading.Semaphore(value=1)= :: semaphore.
+- =threading.Event= :: one thread signals an event and other threads wait for it.
+** Interprocess communication
+*** Pipes
+Pipes are implemented by the operating system and made available in
+the Python standard library.  Pipes are unidirectional channels.
+
+#+LaTex: \begin{block}{Anonymous and named pipes}
+There are /anonymous/ and /named/ pipes. Named pipes (or fifos) are
+external files. By contrast, anonymous pipes exist only within
+processes and are tipically used in conjunction with process /forks/.
+#+LaTex: \end{block}
+*** Anonymous Pipes
+This example forks itself and creates a pipe. The =os.pipe= call returns
+a tuple of two file descriptors, representing the input and output
+sides of the pipe.
+#+begin_src python :results output replace :exports both
+import os, time
+
+def child(pipeout):
+    zzz = 0
+    while True:
+        # make parent wait
+        time.sleep(zzz)
+        # pipes are binary bytes
+        msg = ('Spam %03d' % zzz).encode()
+        # send to parent
+        os.write(pipeout, msg)
+        # goto 0 after 4
+        zzz = (zzz+1) % 5
+#+end_src
+*** Anonymous Pipes
+#+begin_src python :results output replace :exports both
+def parent():
+    # make 2-ended pipe
+    pipein, pipeout = os.pipe()
+    # copy this process
+    if os.fork() == 0:
+        child(pipeout)
+    else:
+        # in parent, listen to pipe
+        while True:
+            # blocks until data sent
+            line = os.read(pipein, 32)
+            print('Parent %d got [%s] at %s' %
+                  (os.getpid(), line, time.time()))
+
+parent()
+#+end_src
+*** Anonymous Pipes
+#+RESULTS:
+#+BEGIN_EXAMPLE
+Parent 79486 got [b'Spam 000'] at 1479696342.063272
+Parent 79486 got [b'Spam 001'] at 1479696343.063545
+Parent 79486 got [b'Spam 002'] at 1479696345.065001
+Parent 79486 got [b'Spam 003'] at 1479696348.066442
+Parent 79486 got [b'Spam 004'] at 1479696352.067562
+Parent 79486 got [b'Spam 000'] at 1479696352.067668
+Parent 79486 got [b'Spam 001'] at 1479696353.068904
+Parent 79486 got [b'Spam 002'] at 1479696355.070184
+Parent 79486 got [b'Spam 003'] at 1479696358.071641
+Parent 79486 got [b'Spam 004Spam 000'] at 1479696362.073227
+Parent 79486 got [b'Spam 001'] at 1479696363.074522
+Parent 79486 got [b'Spam 002'] at 1479696365.075826
+Parent 79486 got [b'Spam 003'] at 1479696368.077408
+Parent 79486 got [b'Spam 004Spam 000'] at 1479696372.078836
+Parent 79486 got [b'Spam 001'] at 1479696373.079927
+#+END_EXAMPLE
+
+*** Named pipes (Fifos)
+#+LaTex: \begin{block}{Named pipes}
+Named pipes are external files to any particular program. Once a named
+pipe file is create, clients open it by name and read and write data
+using normal file operations.
+#+LaTex: \end{block}
+
+In this example, a named pipe is created with the =os.mkfifo=
+call. Because the fifo exists independently of both parent and child,
+there is no reason to fork here.
+*** Named pipes (Fifos)
+#+begin_src python :results output replace :exports both
+import os, time, sys
+fifoname = '/tmp/pipefifo' 
+
+def child():
+    # open fifo pipe file as fd
+    pipeout = os.open(fifoname, os.O_WRONLY)
+    zzz = 0
+    while True:
+        time.sleep(zzz)
+        # binary as opened here
+        msg = ('Spam %03d\n' % zzz).encode()
+        os.write(pipeout, msg)
+        zzz = (zzz+1) % 5
+#+end_src
+*** Named pipes (fifos)
+#+begin_src python :results output replace :exports both
+def parent():
+    # open fifo as text file object
+    pipein = open(fifoname, 'r') 
+    while True:
+        # blocks until data sent
+        line = pipein.readline()[:-1] 
+        print('Parent %d got "%s" at %s' % 
+              (os.getpid(), line, time.time()))
+
+if __name__ == '__main__':
+    if not os.path.exists(fifoname):
+        os.mkfifo(fifoname) 
+    if len(sys.argv) == 1:
+        parent()          
+    else: 
+        child()
+#+end_src
+
+*** Named pipes (Fifos)
+Execute the parent typing:
+#+begin_src sh :results output :exports both
+python pipefifo.py
+Parent 80553 got "Spam 000" at 1479700554.835515
+Parent 80553 got "Spam 001" at 1479700555.840781
+Parent 80553 got "Spam 002" at 1479700557.845987
+Parent 80553 got "Spam 003" at 1479700560.84998
+Parent 80553 got "Spam 004" at 1479700564.855003
+Parent 80553 got "Spam 000" at 1479700564.855088
+Parent 80553 got "Spam 001" at 1479700565.859777
+.....
+#+end_src
+Execute the child:
+#+begin_src sh :results output :exports both
+python pipefifo.py -child
+#+end_src
+
+* Other =os= module exports
+** Other =os= module exports
+*** Other =os= module exports
+- =os.environ= :: manipulates environment variables.
+- =os.fork= :: spawns a new child process.
+- =os.pipe= :: communicates between programs.
+- =os.execlp= :: starts new programs.
+- =os.spawnv= :: starts new programs with lower-level control.
+- =os.open= :: opens a low-level descriptor file.
+- =os.mkdir= :: creates a new directory.
+- =os.mkfifo= :: creates a new named pipe.
+- =os.stat= :: fetches low-level file information.
+- =os.remove= :: deletes a file by its pathname.
+- =os.walk= :: applies a function or loop body to all parts of an entire
+             directory tree.
+*** 
