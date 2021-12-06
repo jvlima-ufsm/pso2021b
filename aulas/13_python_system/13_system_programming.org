@@ -1,11 +1,11 @@
-#+TITLE: System Programming
+#+TITLE: Python System Programming
 #+SUBTITLE: Operating System Practice
-#+DATE: 2019/1
+#+DATE: 2021/2
 #+AUTHOR: João Vicente Ferreira Lima
 #+EMAIL: jvlima@inf.ufsm.br
 #+OPTIONS: H:3 num:t toc:nil \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
 #+LATEX_CLASS: beamer
-#+LaTeX_CLASS_OPTIONS: [xcolor=dvipsnames, 11pt, presentation]
+#+LaTeX_CLASS_OPTIONS: [xcolor=dvipsnames, 10pt, presentation,aspectratio=169]
 #+LANGUAGE: en
 #+SELECT_TAGS: export
 #+EXCLUDE_TAGS: noexport
@@ -36,6 +36,8 @@
 #+LATEX_HEADER:  frameround=tttt,
 #+LATEX_HEADER:  mathescape=false
 #+LATEX_HEADER: }
+
+#+latex_header: \logo{ \includegraphics[height=1cm,width=1cm,keepaspectratio]{logo_inf}    \includegraphics[height=1cm,width=1cm,keepaspectratio]{logo_ufsm} }
 
 #+BEGIN_export latex
 \frame<handout:0>
@@ -79,7 +81,7 @@ The system call steps are:
 The Figure below illustrates the above steps for the /execve()/ system call.
 #+BEGIN_export latex
 \begin{center}
-  \includegraphics[scale=0.6]{figures/systemCall.png}
+  \includegraphics[scale=0.6]{systemCall.png}
 \end{center}
 #+END_export
 
@@ -634,8 +636,7 @@ subprocess.run('hello.py', shell=True)
 Two things must be noted here:
 1. The second command received a list in which the first element is
    the command and the second its arguments.
-2. The =shell=True= argument. On Unix-like platforms, when =shell= is
-=False=, the program command line is run directly by =os.execvp=. If this
+2. The =shell=True= argument. On Unix-like platforms, when =shell= is =False=, the program command line is run directly by =os.execvp=. If this
 argument is =True=, the command is run through a shell instead.
 
 ** Forking processes
@@ -686,8 +687,7 @@ while True:
   parm += 1
   pid = os.fork()
   if pid == 0:
-    os.execlp('python', 'python', 'child.py', 
-              str(parm))
+    os.execlp('python', 'python', 'child.py', str(parm))
     assert False, 'error starting program'
   else:
     print('Child is', pid)
@@ -1164,3 +1164,9 @@ python pipefifo.py -child
 - =os.walk= :: applies a function or loop body to all parts of an entire
              directory tree.
 *** 
+
+
+* Emacs setup                                                      :noexport:
+# Local Variables:
+# eval:   (setq org-latex-listings t)
+# End:

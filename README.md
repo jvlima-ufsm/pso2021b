@@ -25,8 +25,8 @@ Horários: segundas e quartas, 16:30 às 18:30.
 | - | 2021-11-24  Qua | **JAI** |
 | 10 | 2021-11-29  Seg | Introduction to Python ([vídeo](https://youtu.be/m6SRGKjEoH8), [slides](./aulas/10_python/10_introduction_to_python.pdf)) |
 | 11 | 2021-12-01  Qua | [Prática - XKCD](./atividades/11_xkcd) |
-| 12 | 2021-12-06  Seg | Python Scripting ([vídeo](https://youtu.be/afhYrwvBFt0), [slides](./aulas/12_python_scripting/12_python_scripting.pdf) |
-| 13 | 2021-12-13  Seg | Python System Programming |
+| 12 | 2021-12-06  Seg | Python Scripting ([vídeo](https://youtu.be/afhYrwvBFt0), [slides](./aulas/12_python_scripting/12_python_scripting.pdf)) |
+| 13 | 2021-12-13  Seg | [Python System Programming](./aulas/13_python_system/) |
 | 14 | 2021-12-15  Qua | Prática |
 | 15 | 2021-12-20  Seg | Introdução a testes e TDD  |
 | 16 | 2021-12-22  Qua | Prática |
