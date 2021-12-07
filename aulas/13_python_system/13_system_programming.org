@@ -636,8 +636,9 @@ subprocess.run('hello.py', shell=True)
 Two things must be noted here:
 1. The second command received a list in which the first element is
    the command and the second its arguments.
-2. The =shell=True= argument. On Unix-like platforms, when =shell= is =False=, the program command line is run directly by =os.execvp=. If this
-argument is =True=, the command is run through a shell instead.
+2. The =shell=True= argument. On Unix-like platforms, when =shell= is
+   =False=, the program command line is run directly by =os.execvp=. If
+   this argument is =True=, the command is run through a shell instead.
 
 ** Forking processes
 *** Forking processes
