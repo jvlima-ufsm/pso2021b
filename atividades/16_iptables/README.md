@@ -2,7 +2,7 @@
 
 ## Deadline
 
-Prazo: **22/12/2021 (Seg)** pelo link do GitHub (https://classroom.github.com/a/9duKWACQ).
+Prazo: **12/01/2022 (Qua)** pelo link do GitHub (https://classroom.github.com/a/jlb48Fuo).
 
 Você deve escolher seu nome na lista de alunos. Em seguida, o GitHub irá criar um repositório deste trabalho em seu usuário.
 
