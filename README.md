@@ -38,7 +38,7 @@ Horários: segundas e quartas, 16:30 às 18:30.
 | 22 | 2022-01-26 Qua | Prática |
 | 23 | 2022-01-31 Seg | Prática  |
 | 24 | 2022-02-02 Qua | Prática |
-| 25 | 2022-02-07 Seg | Build and Debug Programs |
+| 25 | 2022-02-07 Seg | [Build and Debug Programs](./aulas/25_build/) |
 | 26 | 2022-02-09 Qua | Prática |
 | 27 | 2022-02-14 Seg | Projeto Final |
 | 28 | 2022-02-16 Qua | Projeto Final |
