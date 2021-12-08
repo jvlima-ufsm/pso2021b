@@ -30,7 +30,7 @@ Horários: segundas e quartas, 16:30 às 18:30.
 | 14 | 2021-12-15  Qua | Prática |
 | 15 | 2021-12-20  Seg | [Introdução a TDD](./aulas/15_tdd)  |
 | 16 | 2021-12-22  Qua | Prática |
-| 17 | 2022-01-10  Seg | Introdução em Redes  |
+| 17 | 2022-01-10  Seg | Introdução em Redes ([slides](./aulas/17_redes/17_redes_slides.pdf))  |
 | 18 | 2022-01-12  Qua | Prática  |
 | 19 | 2022-01-17 Seg | Serviços Docker |
 | 20 | 2022-01-19 Qua | Prática |
