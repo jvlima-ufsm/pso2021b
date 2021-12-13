@@ -28,7 +28,7 @@ Horários: segundas e quartas, 16:30 às 18:30.
 | 12 | 2021-12-06  Seg | Python Scripting ([vídeo](https://youtu.be/afhYrwvBFt0), [slides](./aulas/12_python_scripting/12_python_scripting.pdf)) |
 | 13 | 2021-12-13  Seg | Python System Programming ([vídeo](https://youtu.be/HvmboVMLYns), [slides](./aulas/13_python_system/13_system_programming.pdf)) |
 | 14 | 2021-12-15  Qua | [Prática - XKCD 2](./atividades/14_xkcd)  |
-| 15 | 2021-12-20  Seg | Introdução em Redes ([slides](./aulas/15_redes/15_redes_slides.pdf)) |
+| 15 | 2021-12-20  Seg | Introdução em Redes ([vídeo](https://youtu.be/UY0h2OuoVEg),[slides](./aulas/15_redes/15_redes_slides.pdf)) |
 | 16 | 2021-12-22  Qua | [Prática - Análise de Log IPTables](./atividades/16_iptables/) |
 | 17 | 2022-01-10  Seg | [Introdução a TDD](./aulas/17_tdd)  |
 | 18 | 2022-01-12  Qua | [Prática - TDD com Flask](./atividades/18_tdd/)  |
