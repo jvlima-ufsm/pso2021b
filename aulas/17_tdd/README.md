@@ -34,7 +34,8 @@ Cada função dentro da classe  é um caso de teste idependente. Outros
 testes são possíveis como:
 - `assertTrue()`
 - `assertFalse()`
-- `assertRaises()`
+- `assertRaises()` que esta se uma excessão específica acontece
+
 Também é possível definir instruções de inicialização e finalização
 caso necessário com `setUp()` e `tearDown()`.
 
