@@ -32,7 +32,7 @@ Horários: segundas e quartas, 16:30 às 18:30.
 | 16 | 2021-12-22  Qua | [Prática - Análise de Log IPTables](./atividades/16_iptables/) |
 | 17 | 2022-01-10  Seg | [Introdução a TDD](./aulas/17_tdd)  |
 | 18 | 2022-01-12  Qua | [Prática - TDD com Flask](./atividades/18_tdd/)  |
-| 19 | 2022-01-17 Seg | Serviços Docker |
+| 19 | 2022-01-17 Seg | [Serviços Docker](./aulas/19_compose/) |
 | 20 | 2022-01-19 Qua | Prática |
 | 21 | 2022-01-24 Seg | Sistemas de Arquivos e Backup |
 | 22 | 2022-01-26 Qua | Prática |
