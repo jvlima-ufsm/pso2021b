@@ -35,13 +35,13 @@ Horários: segundas e quartas, 16:30 às 18:30.
 | 19 | 2022-01-17 Seg | [Serviços Docker](./aulas/19_compose/) |
 | 20 | 2022-01-19 Qua | [Projeto Final](./atividades/final/) |
 | 21 | 2022-01-24 Seg | [Sistemas de Arquivos e Backup](./aulas/21_arquivos) |
-| 22 | 2022-01-26 Qua | Prática |
-| 23 | 2022-01-31 Seg | Prática  |
+| 22 | 2022-01-26 Qua | [Projeto Final](./atividades/final/) |
+| 23 | 2022-01-31 Seg | [Projeto Final](./atividades/final/)  |
 | 24 | 2022-02-02 Qua | [Projeto Final](./atividades/final/) |
 | 25 | 2022-02-07 Seg | [Build and Debug Programs](./aulas/25_build/) |
-| 26 | 2022-02-09 Qua | Prática |
+| 26 | 2022-02-09 Qua | [Projeto Final](./atividades/final/) |
 | 27 | 2022-02-14 Seg | [Projeto Final](./atividades/final/) |
-| 28 | 2022-02-16 Qua | [Projeto Final](./atividades/final/) |
+| 28 | 2022-02-16 Qua | **ENTREGA** [Projeto Final](./atividades/final/) |
 
 ## Material de apoio
 
